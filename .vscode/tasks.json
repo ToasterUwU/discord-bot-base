@@ -1,0 +1,83 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Delete source-code.zip",
+      "type": "process",
+      "command": "cmd.exe",
+      "args": [
+        "/c delete-source-code.bat"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "echo": false
+      }
+    },
+    {
+      "label": "7zip: Pack source-code.zip",
+      "type": "process",
+      "command": "7z.exe",
+      "args": [
+        "a",
+        "source-code.zip",
+        ".\\*.json",
+        ".\\*.py",
+        ".\\*.txt",
+        ".\\*.iss",
+        ".vscode\\*",
+        "cogs\\*",
+      ],
+      "presentation": {
+        "reveal": "always",
+        "echo": false
+      },
+      "dependsOn": "Delete source-code.zip"
+    },
+    {
+      "label": "Pyinstaller: Compile Script",
+      "type": "process",
+      "command": "pyinstaller.exe",
+      "args": [
+        "bot.py",
+        "--noconfirm"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "echo": false
+      },
+      "dependsOn": "7zip: Pack source-code.zip"
+    },
+    {
+      "label": "Inno Setup: Compile Script",
+      "type": "process",
+      "command": "ISCC.exe",
+      "args": [
+        "bot-setup.iss"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "echo": false
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "dependsOn": "Pyinstaller: Compile Script"
+    },
+    {
+      "label": "Installer: Run",
+      "type": "process",
+      "command": "windows-installer.exe",
+      "args": [],
+      "presentation": {
+        "reveal": "always",
+        "echo": false
+      },
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "dependsOn": "Inno Setup: Compile Script"
+    },
+  ]
+}

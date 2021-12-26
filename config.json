@@ -1,0 +1,9 @@
+{
+    "DEFAULT": {
+        "BASE_KIT_VERSION": "V1.7.1",
+        "PREFIX": ">",
+        "TOKEN": "",
+        "ERROR_WEBHOOK_URL": "",
+        "EMBED_COLOR": "#ff69b4"
+    }
+}

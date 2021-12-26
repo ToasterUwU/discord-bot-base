@@ -1,0 +1,9 @@
+Made by "Aki ToasterUwU#0001" (https://www.fiverr.com/toaster_ger)
+
+Based on:
+Akis Discord bot building kit V1.7.1
+
+Features:
+- Easy to extend
+- Easy to maintain
+- Easy to update
