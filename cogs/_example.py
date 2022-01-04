@@ -37,12 +37,12 @@ class Example(commands.Cog):
     async def cog_check(self, ctx: commands.Context):
         return await self.bot.is_owner(ctx.author)
 
-    @commands.command()
-    async def ask(self, ctx: commands.Context):
+    @nextcord.slash_command(name="ask", description="Example Command")
+    async def ask(self, interaction: nextcord.Integration):
         """Asks the user a question to confirm something."""
         # We create the view and assign it to a variable so we can wait for it later.
         view = Confirm()
-        await ctx.send("Do you want to continue?", view=view)
+        await interaction.send("Do you want to continue?", view=view)
         # Wait for the View to stop listening for input...
         await view.wait()
         if view.value is None:

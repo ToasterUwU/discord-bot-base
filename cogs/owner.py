@@ -9,72 +9,113 @@ class Owner(commands.Cog):
         self.bot = bot
 
     async def cog_check(self, ctx: commands.Context):
-        return await self.bot.is_owner(ctx.author)
+        return not await self.bot.is_owner(ctx.author)
 
-    @commands.command(name="play", hidden=True)
-    async def play_status(self, ctx: commands.Context, *, status: str):
+    @nextcord.slash_command(name="play", description="Sets a 'playing' Status")
+    async def play_status(
+        self,
+        interaction: nextcord.Interaction,
+        status: str = nextcord.SlashOption(
+            name="status", description="The status text to use", required=True
+        ),
+    ):
         """
         Sets a 'playing' Status
         """
-        await self.bot.change_presence(activity=nextcord.Game(status))
-        await ctx.message.add_reaction("✅")
 
-    @commands.command(name="watch", hidden=True)
-    async def watch_status(self, ctx: commands.Context, *, status: str):
+        await self.bot.change_presence(activity=nextcord.Game(status))
+        await interaction.send("Done", ephemeral=True)
+
+    @nextcord.slash_command(name="watch", description="Sets a 'watching' Status")
+    async def watch_status(
+        self,
+        interaction: nextcord.Interaction,
+        status: str = nextcord.SlashOption(
+            name="status", description="The status text to use", required=True
+        ),
+    ):
         """
         Sets a 'watching' Status
         """
+
         await self.bot.change_presence(
             activity=nextcord.Activity(type=nextcord.ActivityType.watching, name=status)
         )
-        await ctx.message.add_reaction("✅")
+        await interaction.send("Done", ephemeral=True)
 
-    @commands.command(name="listen", hidden=True)
-    async def listen_status(self, ctx: commands.Context, *, status: str):
+    @nextcord.slash_command(name="listen", description="Sets a 'listening' Status")
+    async def listen_status(
+        self,
+        interaction: nextcord.Interaction,
+        status: str = nextcord.SlashOption(
+            name="status", description="The status text to use", required=True
+        ),
+    ):
         """
         Sets a 'listening' Status
         """
+
         await self.bot.change_presence(
             activity=nextcord.Activity(
                 type=nextcord.ActivityType.listening, name=status
             )
         )
-        await ctx.message.add_reaction("✅")
+        await interaction.send("Done", ephemeral=True)
 
-    # Hidden means it won't show up on the default help.
-    @commands.command(name="load", hidden=True)
-    async def load_cog(self, ctx, *, cog: str):
-        """Loads a Module."""
+    @nextcord.slash_command(name="load", description="Loads a Cog")
+    async def load_cog(self,
+        interaction: nextcord.Interaction,
+        cog: str = nextcord.SlashOption(
+            name="cog", description="Name of the Cog you want to load", required=True
+        ),
+    ):
+        """
+        Loads a Module.
+        """
 
         try:
             self.bot.load_extension("cogs." + cog)
         except Exception as e:
-            await ctx.send(f"**`ERROR:`** {type(e).__name__} - {e}")
+            await interaction.send(f"**`ERROR:`** {type(e).__name__} - {e}")
         else:
-            await ctx.message.add_reaction("✅")
+            await interaction.send("Done", ephemeral=True)
 
-    @commands.command(name="unload", hidden=True)
-    async def unload_cog(self, ctx, *, cog: str):
-        """Unloads a Module."""
+    @nextcord.slash_command(name="unload", description="Loads a Cog")
+    async def unload_cog(self,
+        interaction: nextcord.Interaction,
+        cog: str = nextcord.SlashOption(
+            name="cog", description="Name of the Cog you want to unload", required=True
+        ),
+    ):
+        """
+        Unloads a Module.
+        """
 
         try:
             self.bot.unload_extension("cogs." + cog)
         except Exception as e:
-            await ctx.send(f"**`ERROR:`** {type(e).__name__} - {e}")
+            await interaction.send(f"**`ERROR:`** {type(e).__name__} - {e}")
         else:
-            await ctx.message.add_reaction("✅")
+            await interaction.send("Done", ephemeral=True)
 
-    @commands.command(name="reload", hidden=True)
-    async def reload_cog(self, ctx, *, cog: str):
-        """Reloads a Module."""
+    @nextcord.slash_command(name="reload", description="Reloads a Cog")
+    async def reload_cog(self,
+        interaction: nextcord.Interaction,
+        cog: str = nextcord.SlashOption(
+            name="cog", description="Name of the Cog you want to reload", required=True
+        ),
+    ):
+        """
+        Reloads a Module.
+        """
 
         try:
             self.bot.unload_extension("cogs." + cog)
             self.bot.load_extension("cogs." + cog)
         except Exception as e:
-            await ctx.send(f"**`ERROR:`** {type(e).__name__} - {e}")
+            await interaction.send(f"**`ERROR:`** {type(e).__name__} - {e}")
         else:
-            await ctx.message.add_reaction("✅")
+            await interaction.send("Done", ephemeral=True)
 
 
 def setup(bot):

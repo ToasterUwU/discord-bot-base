@@ -2,6 +2,26 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Pip: Update requirements.txt",
+      "type": "shell",
+      "command": "pip freeze --user > requirements.txt",
+      "presentation": {
+        "reveal": "always",
+        "echo": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Pip: Install requirements",
+      "type": "shell",
+      "command": "pip install --user -r requirements.txt",
+      "presentation": {
+        "reveal": "always",
+        "echo": false
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Delete source-code.zip",
       "type": "process",
       "command": "cmd.exe",
@@ -25,7 +45,7 @@
         ".\\*.txt",
         ".\\*.iss",
         ".vscode\\*",
-        "cogs\\*",
+        "cogs\\*"
       ],
       "presentation": {
         "reveal": "always",
@@ -78,6 +98,6 @@
         "isDefault": true
       },
       "dependsOn": "Inno Setup: Compile Script"
-    },
+    }
   ]
 }

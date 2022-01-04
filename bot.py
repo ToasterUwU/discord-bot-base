@@ -14,7 +14,7 @@ intents = nextcord.Intents.default()
 # intents.members = True
 # intents.presences = True
 
-bot = Bot(CONFIG["DEFAULT"]["PREFIX"], case_insensitivity=True, intents=intents)
+bot = Bot("/", case_insensitivity=True, intents=intents)
 
 
 if CONFIG["DEFAULT"]["TOKEN"] == "":
@@ -36,7 +36,7 @@ for cog in [
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=nextcord.Game(f"{CONFIG['DEFAULT']['PREFIX']}help"))
+    await bot.change_presence(activity=nextcord.Game("Type '/' to see commands"))
 
     print(f"Online and Ready\nLogged in as {bot.user}")
 
