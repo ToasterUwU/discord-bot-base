@@ -34,23 +34,28 @@ class Example(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    async def cog_check(self, ctx: commands.Context):
-        return await self.bot.is_owner(ctx.author)
+    async def slash_command_check(self, interaction: nextcord.Interaction):
+        if await self.bot.is_owner(interaction.user):
+            return True
+        else:
+            await interaction.send("You are not allowed to use this Command", ephemeral=True)
+            return False
 
     @nextcord.slash_command(name="ask", description="Example Command")
     async def ask(self, interaction: nextcord.Integration):
         """Asks the user a question to confirm something."""
-        # We create the view and assign it to a variable so we can wait for it later.
-        view = Confirm()
-        await interaction.send("Do you want to continue?", view=view)
-        # Wait for the View to stop listening for input...
-        await view.wait()
-        if view.value is None:
-            print("Timed out...")
-        elif view.value:
-            print("Confirmed...")
-        else:
-            print("Cancelled...")
+        if await self.slash_command_check(interaction):
+            # We create the view and assign it to a variable so we can wait for it later.
+            view = Confirm()
+            await interaction.send("Do you want to continue?", view=view)
+            # Wait for the View to stop listening for input...
+            await view.wait()
+            if view.value is None:
+                print("Timed out...")
+            elif view.value:
+                print("Confirmed...")
+            else:
+                print("Cancelled...")
 
 
 def setup(bot):

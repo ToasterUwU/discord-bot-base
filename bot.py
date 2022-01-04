@@ -34,6 +34,7 @@ for cog in [
     except Exception as e:
         print(f"{e}")
 
+
 @bot.event
 async def on_ready():
     await bot.change_presence(activity=nextcord.Game("Type '/' to see commands"))
@@ -41,14 +42,9 @@ async def on_ready():
     print(f"Online and Ready\nLogged in as {bot.user}")
 
 
-@bot.event
-async def on_command_error(ctx, error):
-    logging.error(f"Error in '{ctx.guild.name}' -> {error}")
-
-
-@bot.command(name="reload_all", aliases=["reload-all", "reloadall"], hidden=True)
-async def reload_all_cogs(ctx):
-    if await bot.is_owner(ctx.author):
+@nextcord.slash_command(name="reload-all", description="Reloads all Cogs")
+async def reload_all_cogs(interaction: nextcord.Interaction):
+    if await bot.is_owner(interaction.user):
         usable_cogs = [
             "cogs." + x.name.replace(".py", "")
             for x in os.scandir("cogs")
@@ -62,7 +58,9 @@ async def reload_all_cogs(ctx):
 
             bot.load_extension(cog)
 
-        await ctx.message.add_reaction("✅")
+        await interaction.send("Done", ephemeral=True)
+    else:
+        await interaction.send("You are not allowed to use this Command", ephemeral=True)
 
 
 bot.run(CONFIG["DEFAULT"]["TOKEN"])
