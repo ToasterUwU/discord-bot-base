@@ -34,6 +34,5 @@ CONFIG = JsonDataSaver(
             "ERROR_WEBHOOK_URL": "",
             "EMBED_COLOR": "#ff69b4",
         }
-    },
-    func_if_default=lambda: exit(),
+    }
 )
