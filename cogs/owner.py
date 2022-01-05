@@ -3,7 +3,7 @@ from nextcord.application_command import slash_command
 from nextcord.ext import commands
 from nextcord.interactions import Interaction
 
-from ._functions import *
+from ..internal_tools.discord_functions import *
 
 
 class Owner(commands.Cog):
