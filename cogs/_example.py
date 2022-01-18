@@ -42,7 +42,7 @@ class Example(commands.Cog):
             return False
 
     @nextcord.slash_command(name="ask", description="Example Command")
-    async def ask(self, interaction: nextcord.Integration):
+    async def ask(self, interaction: nextcord.Interaction):
         """Asks the user a question to confirm something."""
         if await self.slash_command_check(interaction):
             # We create the view and assign it to a variable so we can wait for it later.
