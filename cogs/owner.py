@@ -1,7 +1,5 @@
 import nextcord
-from nextcord.application_command import slash_command
 from nextcord.ext import commands
-from nextcord.interactions import Interaction
 
 from ..internal_tools.discord_functions import *
 

@@ -23,16 +23,20 @@ class JsonDataSaver(UserDict):
         with open(self.filename, "w") as f:
             json.dump(self.data, f, indent=4)
 
+def _inform_and_exit():
+    print("Config generated, please edit the new config.json file.")
+    exit()
 
 CONFIG = JsonDataSaver(
     "config",
     default={
         "DEFAULT": {
-            "BASE_KIT_VERSION": "2.1.0",
+            "BASE_KIT_VERSION": "2.1.1",
             "BOT_VERSION": "1.0.0",
             "TOKEN": "",
             "ERROR_WEBHOOK_URL": "",
             "EMBED_COLOR": "#ff69b4",
         }
-    }
+    },
+    func_if_default=_inform_and_exit
 )
