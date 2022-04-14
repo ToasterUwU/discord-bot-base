@@ -8,7 +8,7 @@ class Owner(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    async def slash_command_check(self, interaction: nextcord.Interaction):
+    async def cog_application_command_check(self, interaction: nextcord.Interaction):
         if await self.bot.is_owner(interaction.user):
             return True
         else:
@@ -26,9 +26,8 @@ class Owner(commands.Cog):
         """
         Sets a 'playing' Status
         """
-        if await self.slash_command_check(interaction):
-            await self.bot.change_presence(activity=nextcord.Game(status))
-            await interaction.send("Done", ephemeral=True)
+        await self.bot.change_presence(activity=nextcord.Game(status))
+        await interaction.send("Done", ephemeral=True)
 
     @nextcord.slash_command(name="watch", description="Sets a 'watching' Status")
     async def watch_status(
@@ -41,12 +40,10 @@ class Owner(commands.Cog):
         """
         Sets a 'watching' Status
         """
-
-        if await self.slash_command_check(interaction):
-            await self.bot.change_presence(
-                activity=nextcord.Activity(type=nextcord.ActivityType.watching, name=status)
-            )
-            await interaction.send("Done", ephemeral=True)
+        await self.bot.change_presence(
+            activity=nextcord.Activity(type=nextcord.ActivityType.watching, name=status)
+        )
+        await interaction.send("Done", ephemeral=True)
 
     @nextcord.slash_command(name="listen", description="Sets a 'listening' Status")
     async def listen_status(
@@ -59,14 +56,12 @@ class Owner(commands.Cog):
         """
         Sets a 'listening' Status
         """
-
-        if await self.slash_command_check(interaction):
-            await self.bot.change_presence(
-                activity=nextcord.Activity(
-                    type=nextcord.ActivityType.listening, name=status
-                )
+        await self.bot.change_presence(
+            activity=nextcord.Activity(
+                type=nextcord.ActivityType.listening, name=status
             )
-            await interaction.send("Done", ephemeral=True)
+        )
+        await interaction.send("Done", ephemeral=True)
 
     @nextcord.slash_command(name="load", description="Loads a Cog")
     async def load_cog(
@@ -79,14 +74,12 @@ class Owner(commands.Cog):
         """
         Loads a Module.
         """
-
-        if await self.slash_command_check(interaction):
-            try:
-                self.bot.load_extension("cogs." + cog)
-            except Exception as e:
-                await interaction.send(f"**`ERROR:`** {type(e).__name__} - {e}")
-            else:
-                await interaction.send("Done", ephemeral=True)
+        try:
+            self.bot.load_extension("cogs." + cog)
+        except Exception as e:
+            await interaction.send(f"**`ERROR:`** {type(e).__name__} - {e}")
+        else:
+            await interaction.send("Done", ephemeral=True)
 
     @nextcord.slash_command(name="unload", description="Loads a Cog")
     async def unload_cog(
@@ -99,14 +92,12 @@ class Owner(commands.Cog):
         """
         Unloads a Module.
         """
-
-        if await self.slash_command_check(interaction):
-            try:
-                self.bot.unload_extension("cogs." + cog)
-            except Exception as e:
-                await interaction.send(f"**`ERROR:`** {type(e).__name__} - {e}")
-            else:
-                await interaction.send("Done", ephemeral=True)
+        try:
+            self.bot.unload_extension("cogs." + cog)
+        except Exception as e:
+            await interaction.send(f"**`ERROR:`** {type(e).__name__} - {e}")
+        else:
+            await interaction.send("Done", ephemeral=True)
 
     @nextcord.slash_command(name="reload", description="Reloads a Cog")
     async def reload_cog(
@@ -119,15 +110,13 @@ class Owner(commands.Cog):
         """
         Reloads a Module.
         """
-
-        if await self.slash_command_check(interaction):
-            try:
-                self.bot.unload_extension("cogs." + cog)
-                self.bot.load_extension("cogs." + cog)
-            except Exception as e:
-                await interaction.send(f"**`ERROR:`** {type(e).__name__} - {e}")
-            else:
-                await interaction.send("Done", ephemeral=True)
+        try:
+            self.bot.unload_extension("cogs." + cog)
+            self.bot.load_extension("cogs." + cog)
+        except Exception as e:
+            await interaction.send(f"**`ERROR:`** {type(e).__name__} - {e}")
+        else:
+            await interaction.send("Done", ephemeral=True)
 
 
 def setup(bot):

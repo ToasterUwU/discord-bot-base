@@ -34,7 +34,7 @@ class Example(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    async def slash_command_check(self, interaction: nextcord.Interaction):
+    async def cog_application_command_check(self, interaction: nextcord.Interaction):
         if await self.bot.is_owner(interaction.user):
             return True
         else:
@@ -44,18 +44,25 @@ class Example(commands.Cog):
     @nextcord.slash_command(name="ask", description="Example Command")
     async def ask(self, interaction: nextcord.Interaction):
         """Asks the user a question to confirm something."""
-        if await self.slash_command_check(interaction):
-            # We create the view and assign it to a variable so we can wait for it later.
-            view = Confirm()
-            await interaction.send("Do you want to continue?", view=view)
-            # Wait for the View to stop listening for input...
-            await view.wait()
-            if view.value is None:
-                print("Timed out...")
-            elif view.value:
-                print("Confirmed...")
-            else:
-                print("Cancelled...")
+        # We create the view and assign it to a variable so we can wait for it later.
+        view = Confirm()
+        await interaction.send("Do you want to continue?", view=view)
+        # Wait for the View to stop listening for input...
+        await view.wait()
+        if view.value is None:
+            print("Timed out...")
+        elif view.value:
+            print("Confirmed...")
+        else:
+            print("Cancelled...")
+
+    @nextcord.user_command()
+    async def my_user_command(self, interaction: nextcord.Interaction, member: nextcord.Member):
+        await interaction.response.send_message(f"Hello, {member}!")
+
+    @nextcord.message_command()
+    async def my_message_command(self, interaction: nextcord.Interaction, message: nextcord.Message):
+        await interaction.response.send_message(f"{message}")
 
 
 def setup(bot):
