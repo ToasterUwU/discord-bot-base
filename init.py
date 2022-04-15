@@ -11,7 +11,7 @@ parent_dir = __file__.rsplit("\\", 1)[0] + "\\"
 dir_name = input("Name of the Directory: ")
 if not os.path.exists(parent_dir + dir_name):
     shutil.copytree(
-        f"{parent_dir}.base",
+        f".",
         parent_dir + dir_name,
         ignore=lambda src, names: [
             name
