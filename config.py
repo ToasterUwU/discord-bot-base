@@ -31,7 +31,7 @@ CONFIG = JsonDataSaver(
     "config",
     default={
         "DEFAULT": {
-            "BASE_KIT_VERSION": "2.1.1",
+            "BASE_KIT_VERSION": "2.2.0",
             "BOT_VERSION": "1.0.0",
             "TOKEN": "",
             "ERROR_WEBHOOK_URL": "",
