@@ -6,7 +6,7 @@ from subprocess import Popen
 
 DETACHED_PROCESS = 0x00000008
 
-parent_dir = __file__.rsplit("\\", 1)[0] + "\\"
+parent_dir = __file__.rsplit(".base\\", 1)[0]
 
 dir_name = input("Name of the Directory: ")
 if not os.path.exists(parent_dir + dir_name):
