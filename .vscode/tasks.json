@@ -2,11 +2,11 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Delete source-code.zip",
+      "label": "Delete source_code.zip",
       "type": "process",
       "command": "cmd.exe",
       "args": [
-        "/c delete-source-code.bat"
+        "/c delete_source_code.bat"
       ],
       "presentation": {
         "reveal": "always",
@@ -14,12 +14,12 @@
       }
     },
     {
-      "label": "7zip: Pack source-code.zip",
+      "label": "7zip: Pack source_code.zip",
       "type": "process",
       "command": "7z.exe",
       "args": [
         "a",
-        "source-code.zip",
+        "source_code.zip",
         ".\\*.json",
         ".\\*.py",
         ".\\*.txt",
@@ -32,7 +32,7 @@
         "reveal": "always",
         "echo": false
       },
-      "dependsOn": "Delete source-code.zip"
+      "dependsOn": "Delete source_code.zip"
     },
     {
       "label": "Pyinstaller: Compile Script",
@@ -46,14 +46,14 @@
         "reveal": "always",
         "echo": false
       },
-      "dependsOn": "7zip: Pack source-code.zip"
+      "dependsOn": "7zip: Pack source_code.zip"
     },
     {
       "label": "Inno Setup: Compile Script",
       "type": "process",
       "command": "ISCC.exe",
       "args": [
-        "bot-setup.iss"
+        "bot_setup.iss"
       ],
       "presentation": {
         "reveal": "always",
@@ -68,7 +68,7 @@
     {
       "label": "Installer: Run",
       "type": "process",
-      "command": "windows-installer.exe",
+      "command": "windows_installer.exe",
       "args": [],
       "presentation": {
         "reveal": "always",

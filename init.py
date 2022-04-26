@@ -22,10 +22,10 @@ if not os.path.exists(parent_dir + dir_name):
 
 time.sleep(1)
 
-with open(parent_dir + dir_name + "\\bot-setup.iss", "r") as f:
+with open(parent_dir + dir_name + "\\bot_setup.iss", "r") as f:
     text = f.read()
 
-with open(parent_dir + dir_name + "\\bot-setup.iss", "w") as f:
+with open(parent_dir + dir_name + "\\bot_setup.iss", "w") as f:
     text = text.replace("Base Bot", f"{dir_name} Bot")
     text = text.replace("%APP_ID%", str(uuid.uuid4()))
     f.write(text)

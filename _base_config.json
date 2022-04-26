@@ -1,0 +1,9 @@
+{
+    "DEFAULT": {
+        "BASE_KIT_VERSION": "3.0.0",
+        "BOT_VERSION": "1.0.0",
+        "TOKEN": "",
+        "ERROR_WEBHOOK_URL": "",
+        "EMBED_COLOR": "#ff69b4"
+    }
+}

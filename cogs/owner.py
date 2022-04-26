@@ -1,8 +1,7 @@
 import nextcord
 from nextcord.ext import commands
 
-from internal_tools.discord_functions import *
-
+from internal_tools.discord import *
 
 class Owner(commands.Cog):
     def __init__(self, bot: commands.Bot):

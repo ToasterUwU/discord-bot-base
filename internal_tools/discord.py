@@ -1,8 +1,8 @@
 import nextcord
-from config import CONFIG, JsonDataSaver
 
 
 def CONFIG_EMBED_COLOR():
+    from config import CONFIG
     return nextcord.Colour(int(CONFIG["DEFAULT"]["EMBED_COLOR"].replace("#", ""), 16))
 
 

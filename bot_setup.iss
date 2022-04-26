@@ -24,7 +24,7 @@ InfoBeforeFile=infos.txt
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 OutputDir=.
-OutputBaseFilename=windows-installer
+OutputBaseFilename=windows_installer
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -41,7 +41,7 @@ Source: "cogs\*"; DestDir: "{app}\cogs"; Flags: ignoreversion recursesubdirs cre
 Source: "internal_tools\*"; DestDir: "{app}\internal_tools"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "config.py"; DestDir: "{app}"; Flags: ignoreversion
 Source: "infos.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "source-code.zip"; DestDir: "{app}"; Flags: ignoreversion
+Source: "source_code.zip"; DestDir: "{app}"; Flags: ignoreversion
 Source: "dist\bot\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
