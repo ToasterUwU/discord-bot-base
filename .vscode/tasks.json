@@ -6,7 +6,7 @@
       "type": "process",
       "command": "cmd.exe",
       "args": [
-        "/c delete_source_code.bat"
+        "/c delete_source_code_zip.bat"
       ],
       "presentation": {
         "reveal": "always",
