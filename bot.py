@@ -2,7 +2,7 @@ import logging
 import os
 
 import nextcord
-from nextcord.ext import commands, tasks
+from nextcord.ext import application_checks, commands, tasks
 from nextcord.ext.commands import Bot
 
 from config import CONFIG
@@ -42,25 +42,23 @@ async def on_ready():
     print(f"Online and Ready\nLogged in as {bot.user}")
 
 
-@nextcord.slash_command(name="reload-all", description="Reloads all Cogs")
+@bot.slash_command(name="reload-all", description="Reloads all Cogs")
+@application_checks.is_owner()
 async def reload_all_cogs(interaction: nextcord.Interaction):
-    if await bot.is_owner(interaction.user):
-        usable_cogs = [
-            "cogs." + x.name.replace(".py", "")
-            for x in os.scandir("cogs")
-            if not x.name.startswith("_")
-        ]
-        for cog in usable_cogs:
-            try:
-                bot.unload_extension(cog)
-            except:
-                pass
+    usable_cogs = [
+        "cogs." + x.name.replace(".py", "")
+        for x in os.scandir("cogs")
+        if not x.name.startswith("_")
+    ]
+    for cog in usable_cogs:
+        try:
+            bot.unload_extension(cog)
+        except:
+            pass
 
-            bot.load_extension(cog)
+        bot.load_extension(cog)
 
-        await interaction.send("Done", ephemeral=True)
-    else:
-        await interaction.send("You are not allowed to use this Command", ephemeral=True)
+    await interaction.send("Done", ephemeral=True)
 
 
 bot.run(CONFIG["DEFAULT"]["TOKEN"])
