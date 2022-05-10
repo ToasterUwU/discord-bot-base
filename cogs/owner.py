@@ -21,7 +21,7 @@ class Owner(commands.Cog):
     @nextcord.slash_command(
         name="play",
         description="Sets a 'playing' Status",
-        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_ID"],
+        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_IDS"],
     )
     async def play_status(
         self,
@@ -39,7 +39,7 @@ class Owner(commands.Cog):
     @nextcord.slash_command(
         name="watch",
         description="Sets a 'watching' Status",
-        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_ID"],
+        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_IDS"],
     )
     async def watch_status(
         self,
@@ -59,7 +59,7 @@ class Owner(commands.Cog):
     @nextcord.slash_command(
         name="listen",
         description="Sets a 'listening' Status",
-        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_ID"],
+        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_IDS"],
     )
     async def listen_status(
         self,
@@ -81,7 +81,7 @@ class Owner(commands.Cog):
     @nextcord.slash_command(
         name="load",
         description="Loads a Cog",
-        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_ID"],
+        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_IDS"],
     )
     async def load_cog(
         self,
@@ -103,7 +103,7 @@ class Owner(commands.Cog):
     @nextcord.slash_command(
         name="unload",
         description="Loads a Cog",
-        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_ID"],
+        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_IDS"],
     )
     async def unload_cog(
         self,
@@ -125,7 +125,7 @@ class Owner(commands.Cog):
     @nextcord.slash_command(
         name="reload",
         description="Reloads a Cog",
-        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_ID"],
+        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_IDS"],
     )
     async def reload_cog(
         self,

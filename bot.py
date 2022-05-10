@@ -45,7 +45,7 @@ async def on_ready():
 @bot.slash_command(
     name="reload-all",
     description="Reloads all Cogs",
-    guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_ID"],
+    guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_IDS"],
 )
 @application_checks.is_owner()
 async def reload_all_cogs(interaction: nextcord.Interaction):
