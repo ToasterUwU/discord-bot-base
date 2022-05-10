@@ -38,7 +38,9 @@ class Example(commands.Cog):
         if await self.bot.is_owner(interaction.user):
             return True
         else:
-            await interaction.send("You are not allowed to use this Command", ephemeral=True)
+            await interaction.send(
+                "You are not allowed to use this Command", ephemeral=True
+            )
             return False
 
     @nextcord.slash_command(name="ask", description="Example Command")
@@ -57,11 +59,15 @@ class Example(commands.Cog):
             print("Cancelled...")
 
     @nextcord.user_command()
-    async def my_user_command(self, interaction: nextcord.Interaction, member: nextcord.Member):
+    async def my_user_command(
+        self, interaction: nextcord.Interaction, member: nextcord.Member
+    ):
         await interaction.response.send_message(f"Hello, {member}!")
 
     @nextcord.message_command()
-    async def my_message_command(self, interaction: nextcord.Interaction, message: nextcord.Message):
+    async def my_message_command(
+        self, interaction: nextcord.Interaction, message: nextcord.Message
+    ):
         await interaction.response.send_message(f"{message}")
 
 

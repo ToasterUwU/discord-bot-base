@@ -2,6 +2,8 @@ import nextcord
 from nextcord.ext import commands
 
 from internal_tools.discord import *
+from internal_tools.configuration import CONFIG
+
 
 class Owner(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -11,10 +13,16 @@ class Owner(commands.Cog):
         if await self.bot.is_owner(interaction.user):
             return True
         else:
-            await interaction.send("You are not allowed to use this Command", ephemeral=True)
+            await interaction.send(
+                "You are not allowed to use this Command", ephemeral=True
+            )
             return False
 
-    @nextcord.slash_command(name="play", description="Sets a 'playing' Status")
+    @nextcord.slash_command(
+        name="play",
+        description="Sets a 'playing' Status",
+        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_ID"],
+    )
     async def play_status(
         self,
         interaction: nextcord.Interaction,
@@ -28,7 +36,11 @@ class Owner(commands.Cog):
         await self.bot.change_presence(activity=nextcord.Game(status))
         await interaction.send("Done", ephemeral=True)
 
-    @nextcord.slash_command(name="watch", description="Sets a 'watching' Status")
+    @nextcord.slash_command(
+        name="watch",
+        description="Sets a 'watching' Status",
+        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_ID"],
+    )
     async def watch_status(
         self,
         interaction: nextcord.Interaction,
@@ -44,7 +56,11 @@ class Owner(commands.Cog):
         )
         await interaction.send("Done", ephemeral=True)
 
-    @nextcord.slash_command(name="listen", description="Sets a 'listening' Status")
+    @nextcord.slash_command(
+        name="listen",
+        description="Sets a 'listening' Status",
+        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_ID"],
+    )
     async def listen_status(
         self,
         interaction: nextcord.Interaction,
@@ -62,7 +78,11 @@ class Owner(commands.Cog):
         )
         await interaction.send("Done", ephemeral=True)
 
-    @nextcord.slash_command(name="load", description="Loads a Cog")
+    @nextcord.slash_command(
+        name="load",
+        description="Loads a Cog",
+        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_ID"],
+    )
     async def load_cog(
         self,
         interaction: nextcord.Interaction,
@@ -80,7 +100,11 @@ class Owner(commands.Cog):
         else:
             await interaction.send("Done", ephemeral=True)
 
-    @nextcord.slash_command(name="unload", description="Loads a Cog")
+    @nextcord.slash_command(
+        name="unload",
+        description="Loads a Cog",
+        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_ID"],
+    )
     async def unload_cog(
         self,
         interaction: nextcord.Interaction,
@@ -98,7 +122,11 @@ class Owner(commands.Cog):
         else:
             await interaction.send("Done", ephemeral=True)
 
-    @nextcord.slash_command(name="reload", description="Reloads a Cog")
+    @nextcord.slash_command(
+        name="reload",
+        description="Reloads a Cog",
+        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_ID"],
+    )
     async def reload_cog(
         self,
         interaction: nextcord.Interaction,

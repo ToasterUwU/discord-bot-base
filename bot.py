@@ -42,7 +42,11 @@ async def on_ready():
     print(f"Online and Ready\nLogged in as {bot.user}")
 
 
-@bot.slash_command(name="reload-all", description="Reloads all Cogs")
+@bot.slash_command(
+    name="reload-all",
+    description="Reloads all Cogs",
+    guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_ID"],
+)
 @application_checks.is_owner()
 async def reload_all_cogs(interaction: nextcord.Interaction):
     usable_cogs = [

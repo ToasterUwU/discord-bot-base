@@ -23,6 +23,7 @@ class JsonDataSaver(UserDict):
         with open(self.filename, "w") as f:
             json.dump(self.data, f, indent=4)
 
+
 def _inform_and_exit():
     print("Config generated, please edit the new config.json file.")
     exit()
@@ -32,7 +33,5 @@ with open("_base_config.json", "r") as f:
     default_config = json.load(f)
 
 CONFIG = JsonDataSaver(
-    "config",
-    default=default_config,
-    func_if_default=_inform_and_exit
+    "config", default=default_config, func_if_default=_inform_and_exit
 )
