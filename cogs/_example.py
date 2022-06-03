@@ -1,7 +1,6 @@
 import nextcord
-from nextcord.ext import commands
-
 from internal_tools.discord import *
+from nextcord.ext import commands
 
 
 class Confirm(nextcord.ui.View):
@@ -43,7 +42,12 @@ class Example(commands.Cog):
             )
             return False
 
-    @nextcord.slash_command(name="ask", description="Example Command")
+    @nextcord.slash_command(
+        name="ask",
+        description="Example Command",
+        default_member_permissions=nextcord.Permissions(administrator=True),
+        dm_permission=False,
+    )
     async def ask(self, interaction: nextcord.Interaction):
         """Asks the user a question to confirm something."""
         # We create the view and assign it to a variable so we can wait for it later.
@@ -57,6 +61,39 @@ class Example(commands.Cog):
             print("Confirmed...")
         else:
             print("Cancelled...")
+
+    @nextcord.slash_command(
+        name="localized",
+        description="Tests localization.",
+        name_localizations={
+            nextcord.Locale.en_US: "localized_us",
+            "en-GB": "localized_gb",
+        },
+        description_localizations={
+            nextcord.Locale.en_GB: "GB Tests localization.",
+            "en-US": "US Tests localization.",
+        },
+    )
+    async def slash_localized(
+        self,
+        interaction: nextcord.Interaction,
+        choice_list: str = nextcord.SlashOption(
+            choices=["localized 1", "not localized", "localized 2"],
+            choice_localizations={
+                "localized 1": {
+                    nextcord.Locale.en_US: "US Localized 1",
+                    "en-GB": "GB Localized 1",
+                },
+                "localized 2": {
+                    "en-US": "US Localized 2",
+                    nextcord.Locale.en_GB: "GB Localized 2",
+                },
+            },
+        ),
+    ):
+        await interaction.send(
+            f"Actual values:\nCmd: `/test localized`, Choice: `{choice_list}`"
+        )
 
     @nextcord.user_command()
     async def my_user_command(

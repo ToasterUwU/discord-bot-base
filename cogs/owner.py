@@ -1,8 +1,7 @@
 import nextcord
-from nextcord.ext import commands
-
-from internal_tools.discord import *
 from internal_tools.configuration import CONFIG
+from internal_tools.discord import *
+from nextcord.ext import commands
 
 
 class Owner(commands.Cog):
