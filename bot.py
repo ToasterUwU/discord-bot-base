@@ -5,7 +5,7 @@ import nextcord
 from nextcord.ext import application_checks, commands, tasks
 from nextcord.ext.commands import Bot
 
-from config import CONFIG
+from internal_tools.configuration import CONFIG
 
 logging.basicConfig(filename="bot.log", filemode="w+", level=logging.INFO)
 
@@ -13,6 +13,7 @@ logging.basicConfig(filename="bot.log", filemode="w+", level=logging.INFO)
 intents = nextcord.Intents.default()
 # intents.members = True
 # intents.presences = True
+# intents.message_content = True
 
 bot = Bot("/", case_insensitivity=True, intents=intents)
 
