@@ -1,9 +1,9 @@
 import nextcord
 
+from internal_tools.configuration import CONFIG
+
 
 def CONFIG_EMBED_COLOR():
-    from config import CONFIG
-
     return nextcord.Colour(int(CONFIG["DEFAULT"]["EMBED_COLOR"].replace("#", ""), 16))
 
 
