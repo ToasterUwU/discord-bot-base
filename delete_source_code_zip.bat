@@ -1,3 +1,3 @@
-IF EXIST source-code.zip (
-    del source-code.zip
+IF EXIST source_code.zip (
+    del source_code.zip
 )
