@@ -15,7 +15,7 @@ intents = nextcord.Intents.default()
 # intents.presences = True
 # intents.message_content = True
 
-bot = Bot("/", case_insensitivity=True, intents=intents)
+bot = Bot(intents=intents)
 
 
 if CONFIG["DEFAULT"]["TOKEN"] == "":
