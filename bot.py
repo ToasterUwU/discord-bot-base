@@ -18,9 +18,9 @@ intents = nextcord.Intents.default()
 bot = Bot(intents=intents)
 
 
-if CONFIG["DEFAULT"]["TOKEN"] == "":
-    CONFIG["DEFAULT"]["TOKEN"] = input(
-        "Token is not set in config.json, please enter the token here.\n\nToken: "
+if CONFIG["GENERAL"]["TOKEN"] == "":
+    CONFIG["GENERAL"]["TOKEN"] = input(
+        "Token is not set in config, please enter the token here.\n\nToken: "
     )
     CONFIG.save()
 
@@ -38,7 +38,7 @@ for cog in [
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=nextcord.Game("Type '/' to see commands"))
+    await bot.change_presence(activity=nextcord.Game("with Slash Commands"))
 
     print(f"Online and Ready\nLogged in as {bot.user}")
 
@@ -46,7 +46,7 @@ async def on_ready():
 @bot.slash_command(
     name="reload-all",
     description="Reloads all Cogs",
-    guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_IDS"],
+    guild_ids=CONFIG["GENERAL"]["OWNER_COG_GUILD_IDS"],
 )
 @application_checks.is_owner()
 async def reload_all_cogs(interaction: nextcord.Interaction):
@@ -66,4 +66,4 @@ async def reload_all_cogs(interaction: nextcord.Interaction):
     await interaction.send("Done", ephemeral=True)
 
 
-bot.run(CONFIG["DEFAULT"]["TOKEN"])
+bot.run(CONFIG["GENERAL"]["TOKEN"])
