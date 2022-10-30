@@ -77,7 +77,7 @@ class JsonDictSaver(UserDict):
         name: str,
         default: dict = {},
         func_if_default: Optional[Callable] = None,
-        data_type: Literal["data", "config", "config/base"] = "data",
+        data_type: Literal["data", "config", "config/default"] = "data",
         orjson_flags: List[int] = [orjson.OPT_INDENT_2],
         **kwargs,
     ) -> None:
@@ -125,21 +125,21 @@ class JsonDictSaver(UserDict):
 
 
 categories = {}
-for entry in os.scandir("config/base/"):
+for entry in os.scandir("config/default/"):
     if entry.is_file():
         category_name = entry.name.replace(".json", "")
 
-        base = JsonDictSaver(category_name, data_type="config/base")
+        default = JsonDictSaver(category_name, data_type="config/default")
         conf = JsonDictSaver(category_name, data_type="config")
 
-        for k, v in base.items():
+        for k, v in default.items():
             if k not in conf:
                 conf[k] = v
 
         conf.save()
         categories[category_name] = conf
 
-        del base
+        del default
 
 CONFIG = Config(categories)
 
