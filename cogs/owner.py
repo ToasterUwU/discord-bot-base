@@ -9,18 +9,12 @@ class Owner(commands.Cog):
         self.bot = bot
 
     async def cog_application_command_check(self, interaction: nextcord.Interaction):
-        if await self.bot.is_owner(interaction.user):
-            return True
-        else:
-            await interaction.send(
-                "You are not allowed to use this Command", ephemeral=True
-            )
-            return False
+        return True
 
     @nextcord.slash_command(
         name="play",
         description="Sets a 'playing' Status",
-        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_IDS"],
+        guild_ids=CONFIG["GENERAL"]["OWNER_COG_GUILD_IDS"],
     )
     async def play_status(
         self,
@@ -38,7 +32,7 @@ class Owner(commands.Cog):
     @nextcord.slash_command(
         name="watch",
         description="Sets a 'watching' Status",
-        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_IDS"],
+        guild_ids=CONFIG["GENERAL"]["OWNER_COG_GUILD_IDS"],
     )
     async def watch_status(
         self,
@@ -58,7 +52,7 @@ class Owner(commands.Cog):
     @nextcord.slash_command(
         name="listen",
         description="Sets a 'listening' Status",
-        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_IDS"],
+        guild_ids=CONFIG["GENERAL"]["OWNER_COG_GUILD_IDS"],
     )
     async def listen_status(
         self,
@@ -80,7 +74,7 @@ class Owner(commands.Cog):
     @nextcord.slash_command(
         name="load",
         description="Loads a Cog",
-        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_IDS"],
+        guild_ids=CONFIG["GENERAL"]["OWNER_COG_GUILD_IDS"],
     )
     async def load_cog(
         self,
@@ -102,7 +96,7 @@ class Owner(commands.Cog):
     @nextcord.slash_command(
         name="unload",
         description="Loads a Cog",
-        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_IDS"],
+        guild_ids=CONFIG["GENERAL"]["OWNER_COG_GUILD_IDS"],
     )
     async def unload_cog(
         self,
@@ -124,7 +118,7 @@ class Owner(commands.Cog):
     @nextcord.slash_command(
         name="reload",
         description="Reloads a Cog",
-        guild_ids=CONFIG["DEFAULT"]["OWNER_COG_GUILD_IDS"],
+        guild_ids=CONFIG["GENERAL"]["OWNER_COG_GUILD_IDS"],
     )
     async def reload_cog(
         self,
@@ -145,5 +139,5 @@ class Owner(commands.Cog):
             await interaction.send("Done", ephemeral=True)
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_cog(Owner(bot))

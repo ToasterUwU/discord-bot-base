@@ -34,13 +34,7 @@ class Example(commands.Cog):
         self.bot = bot
 
     async def cog_application_command_check(self, interaction: nextcord.Interaction):
-        if await self.bot.is_owner(interaction.user):
-            return True
-        else:
-            await interaction.send(
-                "You are not allowed to use this Command", ephemeral=True
-            )
-            return False
+        return True
 
     @nextcord.slash_command(
         name="ask",
@@ -108,5 +102,5 @@ class Example(commands.Cog):
         await interaction.response.send_message(f"{message}")
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_cog(Example(bot))
