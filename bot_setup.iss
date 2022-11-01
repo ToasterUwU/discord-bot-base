@@ -13,7 +13,7 @@
 AppId={{%APP_ID%}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-;AppVerName={#MyAppName} {#MyAppVersion}
+AppVerName={#MyAppName}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
@@ -39,7 +39,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "dist\bot\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "cogs\*"; DestDir: "{app}\cogs"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "config\*"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 Source: "internal_tools\*"; DestDir: "{app}\internal_tools"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "infos.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "source_code.zip"; DestDir: "{app}"; Flags: ignoreversion
