@@ -13,7 +13,7 @@
 AppId={{%APP_ID%}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-;AppVerName={#MyAppName} {#MyAppVersion}
+AppVerName={#MyAppName}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
@@ -38,12 +38,16 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "dist\bot\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "cogs\*"; DestDir: "{app}\cogs"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "config\*"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 Source: "internal_tools\*"; DestDir: "{app}\internal_tools"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "_base_config.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "infos.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "source_code.zip"; DestDir: "{app}"; Flags: ignoreversion
 Source: "dist\bot\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+
+[Dirs]
+Name: "{app}\data"
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

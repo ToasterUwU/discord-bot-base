@@ -6,12 +6,13 @@
       "type": "process",
       "command": "cmd.exe",
       "args": [
-        "/c delete_source_code_zip.bat"
+        "/c del source_code.zip 2>nul"
       ],
       "presentation": {
         "reveal": "always",
         "echo": false
-      }
+      },
+      "problemMatcher": []
     },
     {
       "label": "7zip: Pack source_code.zip",
@@ -20,7 +21,9 @@
       "args": [
         "a",
         "source_code.zip",
-        ".\\*.json",
+        ".\\config\\*.json",
+        ".\\config\\default\\*.json",
+        ".\\data\\*.json",
         ".\\*.py",
         ".\\*.txt",
         ".\\*.iss",
