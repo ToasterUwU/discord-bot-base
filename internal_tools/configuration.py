@@ -9,6 +9,9 @@ from typing import Callable, Dict, List, Literal, Optional
 
 import orjson
 
+if not os.path.isdir("data"):
+    os.mkdir("data")
+
 __all__ = ["CONFIG", "JsonDictSaver"]
 
 
