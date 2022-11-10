@@ -1,7 +1,10 @@
+import os
+
 import nextcord
+from nextcord.ext import commands
+
 from internal_tools.configuration import CONFIG
 from internal_tools.discord import *
-from nextcord.ext import commands
 
 
 class Owner(commands.Cog):
@@ -9,7 +12,18 @@ class Owner(commands.Cog):
         self.bot = bot
 
     async def cog_application_command_check(self, interaction: nextcord.Interaction):
-        return True
+        """
+        You need to be the Owner of the Bot to use this.
+        """
+        if interaction.user:
+            if isinstance(interaction.user, nextcord.Member):
+                user = interaction.user._user
+            else:
+                user = interaction.user
+
+            return await self.bot.is_owner(user)
+        else:
+            return False
 
     @nextcord.slash_command(
         name="play",
@@ -71,6 +85,20 @@ class Owner(commands.Cog):
         )
         await interaction.send("Done", ephemeral=True)
 
+    async def cog_autocomplete(self, interaction: nextcord.Interaction, cog: str):
+        all_cogs = [
+            x.name.replace(".py", "")
+            for x in os.scandir("cogs/")
+            if x.is_file() and not x.name.startswith("_")
+        ]
+
+        if cog:
+            await interaction.response.send_autocomplete(
+                [x for x in all_cogs if x.startswith(cog)]
+            )
+        else:
+            await interaction.response.send_autocomplete(all_cogs)
+
     @nextcord.slash_command(
         name="load",
         description="Loads a Cog",
@@ -80,7 +108,10 @@ class Owner(commands.Cog):
         self,
         interaction: nextcord.Interaction,
         cog: str = nextcord.SlashOption(
-            name="cog", description="Name of the Cog you want to load", required=True
+            name="cog",
+            description="Name of the Cog you want to load",
+            required=True,
+            autocomplete_callback=cog_autocomplete,
         ),
     ):
         """
@@ -102,7 +133,10 @@ class Owner(commands.Cog):
         self,
         interaction: nextcord.Interaction,
         cog: str = nextcord.SlashOption(
-            name="cog", description="Name of the Cog you want to unload", required=True
+            name="cog",
+            description="Name of the Cog you want to unload",
+            required=True,
+            autocomplete_callback=cog_autocomplete,
         ),
     ):
         """
@@ -124,7 +158,10 @@ class Owner(commands.Cog):
         self,
         interaction: nextcord.Interaction,
         cog: str = nextcord.SlashOption(
-            name="cog", description="Name of the Cog you want to reload", required=True
+            name="cog",
+            description="Name of the Cog you want to reload",
+            required=True,
+            autocomplete_callback=cog_autocomplete,
         ),
     ):
         """
