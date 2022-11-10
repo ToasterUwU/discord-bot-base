@@ -5,7 +5,7 @@ import uuid
 from collections import UserDict
 from dataclasses import dataclass
 from functools import reduce
-from typing import Callable, Dict, List, Literal, Optional
+from typing import Any, Callable, Dict, List, Literal, Optional
 
 import orjson
 
@@ -110,7 +110,7 @@ class JsonDictSaver(UserDict):
     def __exit__(self, type, value, traceback):
         self.save()
 
-    def __setitem__(self, key, item) -> None:
+    def __setitem__(self, key: Any, item: Any) -> None:
         if not any([isinstance(key, c) for c in self._supported_key_types]):
             raise TypeError(f"Key value '{key}' ({type(key)}) is not supported")
 
