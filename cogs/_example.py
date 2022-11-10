@@ -34,6 +34,9 @@ class Example(commands.Cog):
         self.bot = bot
 
     async def cog_application_command_check(self, interaction: nextcord.Interaction):
+        """
+        Everyone can use this.
+        """
         return True
 
     @nextcord.slash_command(
