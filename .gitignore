@@ -1,6 +1,5 @@
 /.venv
 /bot.log
-config.json
 /source_code.zip
 /.timetracker
 __pycache__
