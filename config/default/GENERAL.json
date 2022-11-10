@@ -2,8 +2,12 @@
   "BASE_KIT_VERSION": "4.0.0",
   "BOT_VERSION": "1.0.0",
   "TOKEN": "",
+  "MEMBERS_INTENT": false,
+  "PRESENCE_INTENT": false,
+  "MESSAGE_CONTENT_INTENT": false,
   "EMBED_COLOR": "#F7A8B8",
   "OWNER_COG_GUILD_IDS": [
     912774585773080606
-  ]
+  ],
+  "ERROR_WEBHOOK_URL": ""
 }
