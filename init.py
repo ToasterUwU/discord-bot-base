@@ -16,7 +16,7 @@ if not os.path.exists(parent_dir + dir_name):
         ignore=lambda src, names: [
             name
             for name in names
-            if any([x in name or x in src for x in [".git", ".venv", "init.py"]])
+            if any([x == name or x == src for x in [".git", ".venv", "init.py"]])
         ],
     )
 
