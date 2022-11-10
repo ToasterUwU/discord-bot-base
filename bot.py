@@ -116,6 +116,14 @@ async def main():
                 "The Bot is missing permissions for something it has to do for this Command. Make sure it has all needed permissions and try again.",
             ):
                 return
+            else:
+                try:
+                    if interaction.user:
+                        await interaction.user.send(
+                            f"The Bot lacks the Permissions needed to send Messages in the Channel you just tried to use a Command in."
+                        )
+                except:
+                    return
 
         elif isinstance(original_exception, nextcord.errors.DiscordServerError):
             if await _try_send(
@@ -194,6 +202,24 @@ async def main():
                 return
 
         elif isinstance(
+            original_exception,
+            application_checks.errors.ApplicationBotMissingPermissions,
+        ):
+            if await _try_send(
+                interaction,
+                f"The Bot lacks the Permissions needed to use this Command.\nThe Bot needs all of these Permissions: {', '.join(original_exception.missing_permissions)}",
+            ):
+                return
+            else:
+                try:
+                    if interaction.user:
+                        await interaction.user.send(
+                            f"The Bot lacks the Permissions needed to send Messages in the Channel you just tried to use a Command in.\nThe Bot needs all of these Permissions: {', '.join(original_exception.missing_permissions)}"
+                        )
+                except:
+                    return
+
+        elif isinstance(
             original_exception, application_checks.errors.ApplicationNoPrivateMessage
         ):
             if await _try_send(
@@ -239,21 +265,11 @@ async def main():
 
         elif isinstance(
             original_exception,
-            application_checks.errors.ApplicationBotMissingPermissions,
+            application_checks.errors.ApplicationCheckForBotOnly,
         ):
             if await _try_send(
                 interaction,
-                f"The Bot lacks the Permissions needed to use this Command.\nThe Bot needs all of these Permissions: {', '.join(original_exception.missing_permissions)}",
-            ):
-                return
-
-        elif isinstance(
-            original_exception,
-            application_checks.errors.ApplicationBotMissingPermissions,
-        ):
-            if await _try_send(
-                interaction,
-                f"The Bot lacks the Permissions needed to use this Command.\nThe Bot needs all of these Permissions: {', '.join(original_exception.missing_permissions)}",
+                f"This Command is only usable for other Bots.",
             ):
                 return
 
