@@ -25,11 +25,11 @@
         "requirements.txt",
         "bot_setup.iss",
         "bot.py",
-        "config\\*",
-        "data\\*",
-        ".vscode\\*",
-        "cogs\\*",
-        "internal_tools\\*"
+        "config",
+        "data",
+        ".vscode",
+        "cogs",
+        "internal_tools"
       ],
       "presentation": {
         "reveal": "always",
