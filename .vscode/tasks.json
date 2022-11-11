@@ -21,12 +21,12 @@
       "args": [
         "a",
         "source_code.zip",
-        ".\\config\\*.json",
-        ".\\config\\default\\*.json",
-        ".\\data\\*.json",
-        ".\\*.py",
-        ".\\*.txt",
-        ".\\*.iss",
+        "infos.txt",
+        "requirements.txt",
+        "bot_setup.iss",
+        "bot.py",
+        "config\\*",
+        "data\\*",
         ".vscode\\*",
         "cogs\\*",
         "internal_tools\\*"
