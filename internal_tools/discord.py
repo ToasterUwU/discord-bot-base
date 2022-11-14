@@ -6,6 +6,9 @@ import nextcord
 from internal_tools.configuration import CONFIG
 
 
+__all__ = ["fancy_embed", "GetOrFetch"]
+
+
 def CONFIG_EMBED_COLOR():
     """
     Function to give color from the config back
