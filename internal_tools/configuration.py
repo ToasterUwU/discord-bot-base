@@ -11,6 +11,9 @@ import orjson
 
 __all__ = ["CONFIG", "JsonDictSaver"]
 
+if not os.path.isdir("data"):
+    os.mkdir("data")
+
 
 class Config(UserDict):
     def __init__(self, categories: Dict[str, "JsonDictSaver"] = {}):
