@@ -102,7 +102,23 @@ class JsonDictSaver(UserDict):
                 func_if_default()
 
         with open(self.filename, "r") as f:
-            self.data = orjson.loads(f.read())
+            data = orjson.loads(f.read())
+
+        def convert_str_keys_to_int_keys(data: dict):
+            new_data = {}
+
+            for key, sub_data in data.items():
+                if isinstance(key, str) and key.isnumeric():
+                    key = int(key)
+
+                if isinstance(sub_data, dict):
+                    sub_data = convert_str_keys_to_int_keys(sub_data)
+
+                new_data[key] = sub_data
+
+            return new_data
+
+        self.data = convert_str_keys_to_int_keys(data)
 
     def __enter__(self):
         return self
