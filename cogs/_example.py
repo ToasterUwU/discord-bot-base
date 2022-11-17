@@ -1,6 +1,7 @@
 import nextcord
-from internal_tools.discord import *
 from nextcord.ext import commands
+
+from internal_tools.discord import *
 
 
 class Confirm(nextcord.ui.View):
