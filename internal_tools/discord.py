@@ -1,12 +1,11 @@
 import datetime
-from typing import Optional, Union
+from typing import List, Optional, Union
 
 import nextcord
 
 from internal_tools.configuration import CONFIG
 
-
-__all__ = ["fancy_embed", "GetOrFetch"]
+__all__ = ["fancy_embed", "GetOrFetch", "CatalogView"]
 
 
 def CONFIG_EMBED_COLOR():
@@ -14,6 +13,145 @@ def CONFIG_EMBED_COLOR():
     Function to give color from the config back
     """
     return nextcord.Colour(int(CONFIG["GENERAL"]["EMBED_COLOR"].replace("#", ""), 16))
+
+
+class CatalogView(nextcord.ui.View):
+    def __init__(self, pages: List[nextcord.Embed], timeout: Optional[float] = 300):
+        if len(pages) <= 1:
+            raise ValueError(
+                "Need at least two pages for this Menu to work and make sense."
+            )
+
+        super().__init__(timeout=timeout)
+
+        for i, page in enumerate(pages, start=0):
+            page.set_footer(text=f"Page {i+1}/{len(pages)}")
+
+            if i > 0:
+                page.add_field(
+                    name="Previous Page:", value=f"**{pages[i-1].title}**", inline=False
+                )
+
+            if i < len(pages) - 1:
+                page.add_field(
+                    name="Next Page:", value=f"**{pages[i+1].title}**", inline=False
+                )
+
+        self.pages = pages
+        self.current_page: int = 0
+
+        self.user: Optional[Union[nextcord.User, nextcord.Member]] = None
+        self.messsage: nextcord.Message
+
+    async def show_page(self, number: int):
+        if number < 0 or number > len(self.pages) - 1:
+            raise ValueError("Index out of range.")
+
+        await self.messsage.edit(embed=self.pages[number])
+
+        self.current_page = number
+
+    async def start(self, interaction: nextcord.Interaction):
+        self.user = interaction.user
+
+        msg = await interaction.response.send_message(
+            embed=self.pages[self.current_page], view=self
+        )
+        self.messsage = await msg.fetch()
+
+    async def on_timeout(self) -> None:
+        await self.messsage.delete()
+
+        return await super().on_timeout()
+
+    def allowed_to_use(
+        self, interaction_user: Optional[Union[nextcord.User, nextcord.Member]]
+    ):
+        if not self.user:
+            return True
+
+        return interaction_user == self.user
+
+    @nextcord.ui.button(label="⏮️", style=nextcord.ButtonStyle.secondary)
+    async def first_page(
+        self, button: nextcord.ui.Button, interaction: nextcord.Interaction
+    ):
+        if not self.allowed_to_use(interaction.user):
+            await interaction.send(
+                "You are not allowed to use this Catalog.", ephemeral=True
+            )
+            return
+
+        if self.current_page == 0:
+            await interaction.send("You are already on the first page.", ephemeral=True)
+            return
+
+        await self.show_page(0)
+        await interaction.response.pong()
+
+    @nextcord.ui.button(label="◀️", style=nextcord.ButtonStyle.primary)
+    async def previous_page(
+        self, button: nextcord.ui.Button, interaction: nextcord.Interaction
+    ):
+        if not self.allowed_to_use(interaction.user):
+            await interaction.send(
+                "You are not allowed to use this Catalog.", ephemeral=True
+            )
+            return
+
+        if self.current_page == 0:
+            await interaction.send("You are already on the first page.", ephemeral=True)
+            return
+
+        await self.show_page(self.current_page - 1)
+        await interaction.response.pong()
+
+    @nextcord.ui.button(label="▶️", style=nextcord.ButtonStyle.primary)
+    async def next_page(
+        self, button: nextcord.ui.Button, interaction: nextcord.Interaction
+    ):
+        if not self.allowed_to_use(interaction.user):
+            await interaction.send(
+                "You are not allowed to use this Catalog.", ephemeral=True
+            )
+            return
+
+        if self.current_page == len(self.pages) - 1:
+            await interaction.send("You are already on the last page.", ephemeral=True)
+            return
+
+        await self.show_page(self.current_page + 1)
+        await interaction.response.pong()
+
+    @nextcord.ui.button(label="⏭️", style=nextcord.ButtonStyle.secondary)
+    async def last_page(
+        self, button: nextcord.ui.Button, interaction: nextcord.Interaction
+    ):
+        if not self.allowed_to_use(interaction.user):
+            await interaction.send(
+                "You are not allowed to use this Catalog.", ephemeral=True
+            )
+            return
+
+        if self.current_page == len(self.pages) - 1:
+            await interaction.send("You are already on the last page.", ephemeral=True)
+            return
+
+        await self.show_page(len(self.pages) - 1)
+        await interaction.response.pong()
+
+    @nextcord.ui.button(label="⏹️", style=nextcord.ButtonStyle.secondary)
+    async def stop_catalog(
+        self, button: nextcord.ui.Button, interaction: nextcord.Interaction
+    ):
+        if not self.allowed_to_use(interaction.user):
+            await interaction.send(
+                "You are not allowed to use this Catalog.", ephemeral=True
+            )
+            return
+
+        await interaction.response.pong()
+        await self.messsage.delete()
 
 
 def fancy_embed(
