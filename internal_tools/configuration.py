@@ -1,9 +1,8 @@
 import datetime
-import enum
 import os
+import re
 import uuid
 from collections import UserDict
-from dataclasses import dataclass
 from functools import reduce
 from typing import Any, Callable, Dict, List, Literal, Optional
 
@@ -47,6 +46,10 @@ class Config(UserDict):
 
 
 class JsonDictSaver(UserDict):
+    """
+    Note: If you enter a dataclass, you manually have to convert it from type dict after loading.
+    """
+
     _supported_key_types = [
         str,
         int,
@@ -56,7 +59,6 @@ class JsonDictSaver(UserDict):
         datetime.datetime,
         datetime.date,
         datetime.time,
-        enum.Enum,
         uuid.UUID,
     ]
     _supported_value_types = [
@@ -70,9 +72,8 @@ class JsonDictSaver(UserDict):
         datetime.datetime,
         datetime.date,
         datetime.time,
-        enum.Enum,
         uuid.UUID,
-        type(dataclass),
+        object,
     ]
 
     def __init__(
@@ -107,21 +108,7 @@ class JsonDictSaver(UserDict):
         with open(self.filename, "r") as f:
             data = orjson.loads(f.read())
 
-        def convert_str_keys_to_int_keys(data: dict):
-            new_data = {}
-
-            for key, sub_data in data.items():
-                if isinstance(key, str) and key.isnumeric():
-                    key = int(key)
-
-                if isinstance(sub_data, dict):
-                    sub_data = convert_str_keys_to_int_keys(sub_data)
-
-                new_data[key] = sub_data
-
-            return new_data
-
-        self.data = convert_str_keys_to_int_keys(data)
+        self.data = self._convert_data_to_correct_types(data)
 
     def __enter__(self):
         return self
@@ -141,6 +128,53 @@ class JsonDictSaver(UserDict):
     def save(self):
         with open(self.filename, "w") as f:
             f.write(orjson.dumps(self.data, option=self.orjson_option).decode())
+
+    def _convert_single_value_to_correct_type(self, val):
+        if isinstance(val, str):
+            if val.isnumeric():
+                val = int(val)
+
+            elif val.replace(".", "").isnumeric() and val.count(".") == 1:
+                val = float(val)
+
+            elif val == "true":
+                val = True
+
+            elif val == "false":
+                val = False
+
+            elif val == "null":
+                val = None
+
+            elif re.match(r"\d{1,4}-\d{1,2}-\d{1,4}T\d{1,2}:\d{1,2}:\d{1,2}", val):
+                val = datetime.datetime.fromisoformat(val)
+
+            elif re.match(r"\d{1,4}-\d{1,2}-\d{1,4}", val):
+                val = datetime.date.fromisoformat(val)
+
+            elif re.match(r"\d{1,2}:\d{1,2}:\d{1,2}", val):
+                val = datetime.time.fromisoformat(val)
+
+            elif re.match(
+                r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+                val,
+            ):
+                val = uuid.UUID("{" f"{val}" "}")
+
+        return val
+
+    def _convert_data_to_correct_types(self, data: dict):
+        new_data = {}
+
+        for key, sub_data in data.items():
+            if isinstance(sub_data, dict):
+                sub_data = self._convert_data_to_correct_types(sub_data)
+            else:
+                sub_data = self._convert_single_value_to_correct_type(sub_data)
+
+            new_data[self._convert_single_value_to_correct_type(key)] = sub_data
+
+        return new_data
 
 
 categories = {}
