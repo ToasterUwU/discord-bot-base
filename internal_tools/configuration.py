@@ -99,13 +99,13 @@ class JsonDictSaver(UserDict):
         )  # Bitwise OR for every flag
 
         if not os.path.exists(self.filename):
-            with open(self.filename, "w+", encoding='utf-8') as f:
+            with open(self.filename, "w+", encoding="utf-8") as f:
                 f.write(orjson.dumps(default, option=self.orjson_option).decode())
 
             if func_if_default:
                 func_if_default()
 
-        with open(self.filename, "r", encoding='utf-8') as f:
+        with open(self.filename, "r", encoding="utf-8") as f:
             data = orjson.loads(f.read())
 
         self.data = self._convert_data_to_correct_types(data)
@@ -126,7 +126,7 @@ class JsonDictSaver(UserDict):
         return super().__setitem__(key, item)
 
     def save(self):
-        with open(self.filename, "w", encoding='utf-8') as f:
+        with open(self.filename, "w", encoding="utf-8") as f:
             f.write(orjson.dumps(self.data, option=self.orjson_option).decode())
 
     def _convert_single_value_to_correct_type(self, val):
