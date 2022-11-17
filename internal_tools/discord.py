@@ -153,6 +153,8 @@ class CatalogView(nextcord.ui.View):
         await interaction.response.pong()
         await self.messsage.delete()
 
+        self.stop()
+
 
 def fancy_embed(
     title: str = "",
