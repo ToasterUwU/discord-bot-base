@@ -4,10 +4,19 @@
     {
       "label": "Delete source_code.zip",
       "type": "process",
-      "command": "cmd.exe",
-      "args": [
-        "/c del source_code.zip 2>nul"
-      ],
+      "linux": {
+        "command": "rm",
+        "args": [
+          "-f",
+          "source_code.zip"
+        ]
+      },
+      "windows": {
+        "command": "cmd.exe",
+        "args": [
+          "/c del source_code.zip 2>nul"
+        ]
+      },
       "presentation": {
         "reveal": "always",
         "echo": false
@@ -17,20 +26,38 @@
     {
       "label": "7zip: Pack source_code.zip",
       "type": "process",
-      "command": "7z.exe",
-      "args": [
-        "a",
-        "source_code.zip",
-        "infos.txt",
-        "requirements.txt",
-        "bot_setup.iss",
-        "bot.py",
-        "config",
-        "data",
-        ".vscode",
-        "cogs",
-        "internal_tools"
-      ],
+      "windows": {
+        "command": "7z.exe",
+        "args": [
+          "a",
+          "source_code.zip",
+          "infos.txt",
+          "requirements.txt",
+          "bot_setup.iss",
+          "bot.py",
+          "config",
+          "data",
+          ".vscode",
+          "cogs",
+          "internal_tools"
+        ]
+      },
+      "linux": {
+        "command": "zip",
+        "args": [
+          "-r",
+          "source_code.zip",
+          "infos.txt",
+          "requirements.txt",
+          "bot_setup.iss",
+          "bot.py",
+          "config/",
+          "data/",
+          ".vscode/",
+          "cogs/",
+          "internal_tools/"
+        ]
+      },
       "presentation": {
         "reveal": "always",
         "echo": false
@@ -40,11 +67,19 @@
     {
       "label": "Pyinstaller: Compile Script",
       "type": "process",
-      "command": "pyinstaller.exe",
-      "args": [
-        "bot.py",
-        "--noconfirm"
-      ],
+      "windows": {
+        "command": "pyinstaller.exe",
+        "args": [
+          "bot.py",
+          "--noconfirm"
+        ]
+      },
+      "linux": {
+        "command": "echo",
+        "args": [
+          "Cant use Inno Setup on Linux, no need to use pyinstaller."
+        ]
+      },
       "presentation": {
         "reveal": "always",
         "echo": false
@@ -54,10 +89,18 @@
     {
       "label": "Inno Setup: Compile Script",
       "type": "process",
-      "command": "ISCC.exe",
-      "args": [
-        "bot_setup.iss"
-      ],
+      "windows": {
+        "command": "ISCC.exe",
+        "args": [
+          "bot_setup.iss"
+        ]
+      },
+      "linux": {
+        "command": "echo",
+        "args": [
+          "Cant use Inno Setup on Linux."
+        ]
+      },
       "presentation": {
         "reveal": "always",
         "echo": false
@@ -71,8 +114,16 @@
     {
       "label": "Installer: Run",
       "type": "process",
-      "command": "windows_installer.exe",
-      "args": [],
+      "windows": {
+        "command": "windows_installer.exe",
+        "args": []
+      },
+      "linux": {
+        "command": "echo",
+        "args": [
+          "Cant use Inno Setup on Linux, cant run the non existing Installer."
+        ]
+      },
       "presentation": {
         "reveal": "always",
         "echo": false
