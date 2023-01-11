@@ -290,7 +290,7 @@ async def main():
                 CONFIG["GENERAL"]["ERROR_WEBHOOK_URL"], session=aiohttp.ClientSession()
             )
 
-            text = "".join(traceback.format_exception(original_exception))
+            text = "".join(traceback.format_exception(type(original_exception), original_exception, original_exception.__traceback__))  # type: ignore
             await webhook.send(f"Unpredicted Error:\n```\n{text}\n```")
 
     await bot.start(CONFIG["GENERAL"]["TOKEN"])
