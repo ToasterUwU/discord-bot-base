@@ -286,12 +286,13 @@ async def main():
                 return
 
         if CONFIG["GENERAL"]["ERROR_WEBHOOK_URL"]:
-            webhook = nextcord.Webhook.from_url(
-                CONFIG["GENERAL"]["ERROR_WEBHOOK_URL"], session=aiohttp.ClientSession()
-            )
+            async with aiohttp.ClientSession() as session:
+                webhook = nextcord.Webhook.from_url(
+                    CONFIG["GENERAL"]["ERROR_WEBHOOK_URL"], session=session
+                )
 
-            text = "".join(traceback.format_exception(type(original_exception), original_exception, original_exception.__traceback__))  # type: ignore
-            await webhook.send(f"Unpredicted Error:\n```\n{text}\n```")
+                text = "".join(traceback.format_exception(type(original_exception), original_exception, original_exception.__traceback__))  # type: ignore
+                await webhook.send(f"Unpredicted Error:\n```\n{text}\n```")
 
     await bot.start(CONFIG["GENERAL"]["TOKEN"])
 
