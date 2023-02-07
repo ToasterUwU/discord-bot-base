@@ -4,8 +4,6 @@ import time
 import uuid
 from subprocess import Popen
 
-DETACHED_PROCESS = 0x00000008
-
 parent_dir = __file__.rsplit(".base/", 1)[0]
 
 dir_name = input("Name of the Directory: ")
@@ -37,6 +35,5 @@ p = Popen(
     stdout=None,
     stderr=None,
     close_fds=True,
-    creationflags=DETACHED_PROCESS,
     preexec_fn=os.setpgrp,
 )
