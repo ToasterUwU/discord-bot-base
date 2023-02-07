@@ -29,7 +29,7 @@ with open(parent_dir + dir_name + "/bot_setup.iss", "w") as f:
     f.write(text)
 
 p = Popen(
-    f'nohup code "{parent_dir + dir_name}"',
+    f'nohup code "{parent_dir + dir_name}" > /dev/null',
     shell=True,
     stdin=None,
     stdout=None,
