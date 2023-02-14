@@ -83,6 +83,7 @@ class JsonDictSaver(UserDict):
         func_if_default: Optional[Callable] = None,
         data_type: Literal["data", "config", "config/default"] = "data",
         orjson_flags: List[int] = [orjson.OPT_INDENT_2],
+        auto_convert_data: bool = True,
         **kwargs,
     ) -> None:
         super().__init__(**kwargs)
@@ -108,7 +109,10 @@ class JsonDictSaver(UserDict):
         with open(self.filename, "r", encoding="utf-8") as f:
             data = orjson.loads(f.read())
 
-        self.data = self._convert_data_to_correct_types(data)
+        if auto_convert_data:
+            self.data = self._convert_data_to_correct_types(data)
+        else:
+            self.data = data
 
     def __enter__(self):
         return self
