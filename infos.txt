@@ -1,4 +1,4 @@
-Made by "Aki ToasterUwU#0001" (https://www.fiverr.com/toaster_ger / https://github.com/ToasterUwU)
+Made by "Aki ToasterUwU#0001" ( https://github.com/ToasterUwU )
 
 Based on:
 Akis Discord bot building kit V4.2.2
@@ -9,6 +9,6 @@ Features:
 - Easy to update
 
 Rules:
-- Using this template for making bots yourself is forbidden unless you have asked me and got explicit permission
+- Using this template for making bots yourself without it being open source, is forbidden unless you have asked me and got explicit permission
 - Claiming you made this is forbidden
 - Having a great day is mandatory
