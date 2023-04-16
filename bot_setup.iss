@@ -4,7 +4,7 @@
 #define MyAppName "Base Bot"
 #define MyAppVersion "1.0"
 #define MyAppPublisher "ToasterUwU"
-#define MyAppURL "https://www.fiverr.com/toaster_ger"
+#define MyAppURL "https://github.com/ToasterUwU"
 #define MyAppExeName "bot.exe"
 
 [Setup]
