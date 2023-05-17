@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+import sys
 import traceback
 from typing import Union
 
@@ -22,9 +23,14 @@ async def main():
     bot = commands.Bot(intents=intents)
 
     if CONFIG["GENERAL"]["TOKEN"] == "":
-        CONFIG["GENERAL"]["TOKEN"] = input(
-            "Token is not set in config, please enter the token here.\n\nToken: "
-        )
+        if len(sys.argv) > 1:
+            token = sys.argv[1]
+        else:
+            token = input(
+                "Token is not set in config, please enter the token here.\n\nToken: "
+            )
+
+        CONFIG["GENERAL"]["TOKEN"] = token
         CONFIG.save()
 
     for cog in [
