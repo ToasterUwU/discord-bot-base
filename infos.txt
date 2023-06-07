@@ -1,4 +1,4 @@
-Made by "Aki ToasterUwU#0001" ( https://github.com/ToasterUwU )
+Made by @ToasterUwU ( https://github.com/ToasterUwU )
 
 Based on:
 Akis Discord bot building kit V4.3.0

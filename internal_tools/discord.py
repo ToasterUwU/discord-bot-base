@@ -162,7 +162,7 @@ def fancy_embed(
     fields: dict = {},
     inline: bool = False,
     color: nextcord.Colour = CONFIG_EMBED_COLOR(),
-    footer: Optional[str] = "Made by: Aki ToasterUwU#0001",
+    footer: Optional[str] = "Made by: @ToasterUwU",
     url: Optional[str] = None,
     timestamp: Optional[datetime.datetime] = None,
     author: Optional[Union[nextcord.User, nextcord.Member]] = None,
