@@ -2,18 +2,23 @@ import asyncio
 import logging
 import os
 import sys
-import traceback
 from typing import Union
 
-import aiohttp
 import nextcord
 from nextcord.ext import application_checks, commands, tasks
 
 from internal_tools.configuration import CONFIG
+from internal_tools.general import error_webhook_send
 
 
 async def main():
-    logging.basicConfig(filename="bot.log", filemode="w+", level=logging.INFO)
+    logger = logging.getLogger("nextcord")
+    logger.setLevel(logging.WARNING)
+    handler = logging.FileHandler(filename="bot.log", encoding="utf-8", mode="w")
+    handler.setFormatter(
+        logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
+    )
+    logger.addHandler(handler)
 
     intents = nextcord.Intents.default()
     intents.members = CONFIG["GENERAL"]["MEMBERS_INTENT"]
@@ -291,14 +296,7 @@ async def main():
             ):
                 return
 
-        if CONFIG["GENERAL"]["ERROR_WEBHOOK_URL"]:
-            async with aiohttp.ClientSession() as session:
-                webhook = nextcord.Webhook.from_url(
-                    CONFIG["GENERAL"]["ERROR_WEBHOOK_URL"], session=session
-                )
-
-                text = "".join(traceback.format_exception(type(original_exception), original_exception, original_exception.__traceback__))  # type: ignore
-                await webhook.send(f"Unpredicted Error:\n```\n{text}\n```")
+        await error_webhook_send(original_exception)
 
     await bot.start(CONFIG["GENERAL"]["TOKEN"])
 
