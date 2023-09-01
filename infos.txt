@@ -1,7 +1,7 @@
 Made by @ToasterUwU ( https://github.com/ToasterUwU )
 
 Based on:
-Akis Discord bot building kit V4.4.0
+Akis Discord bot building kit V4.4.1
 
 Features:
 - Easy to extend
