@@ -9,7 +9,7 @@ from internal_tools.configuration import CONFIG
 
 async def error_webhook_send(txt_or_error: Union[str, Exception]):
     if isinstance(txt_or_error, Exception):
-        error_text = "".join(traceback.format_exception(type(error), error, error.__traceback__))  # type: ignore
+        error_text = "".join(traceback.format_exception(type(txt_or_error), txt_or_error, txt_or_error.__traceback__))  # type: ignore
         txt_or_error = f"Unpredicted Error:\n```\n{error_text}\n```"
 
     if CONFIG["GENERAL"]["ERROR_WEBHOOK_URL"]:
