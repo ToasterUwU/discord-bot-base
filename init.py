@@ -35,5 +35,5 @@ p = Popen(
     stdout=None,
     stderr=None,
     close_fds=True,
-    preexec_fn=os.setpgrp,
+    preexec_fn=os.setpgrp,  # type: ignore
 )
