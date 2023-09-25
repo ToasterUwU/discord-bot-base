@@ -1,0 +1,32 @@
+name: Adjust new Fork to be not a template anymore
+
+on:
+  fork: # Trigger when the repository is forked
+
+jobs:
+  auto_commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Make changes
+        run: |
+          sed -i 's/Base Bot/${{ github.event.repository.name }} - Discord Bot/g' bot_setup.iss
+          sed -i 's/%APP_ID%/$(uuidgen)/g' bot_setup.iss
+
+      - name: Check for changes
+        run: |
+          if git diff-index --quiet HEAD --; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+      - name: Commit and push
+        run: |
+          git config --global user.name "${{ github.event.repository.owner.login }}"
+          git config --global user.email "${{ github.event.repository.owner.email }}"
+          git add .
+          git commit -m "Automatic changes on fork"
+          git push origin HEAD:main
