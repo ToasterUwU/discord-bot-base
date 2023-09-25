@@ -1,0 +1,39 @@
+import os
+import shutil
+import time
+import uuid
+from subprocess import Popen
+
+parent_dir = __file__.rsplit(".base/", 1)[0]
+
+dir_name = input("Name of the Directory: ")
+if not os.path.exists(parent_dir + dir_name):
+    shutil.copytree(
+        f".",
+        parent_dir + dir_name,
+        ignore=lambda src, names: [
+            name
+            for name in names
+            if any([x == name or x == src for x in [".git", ".venv", "init.py"]])
+        ],
+    )
+
+time.sleep(1)
+
+with open(parent_dir + dir_name + "/bot_setup.iss", "r") as f:
+    text = f.read()
+
+with open(parent_dir + dir_name + "/bot_setup.iss", "w") as f:
+    text = text.replace("Base Bot", f"{dir_name} Bot")
+    text = text.replace("%APP_ID%", str(uuid.uuid4()))
+    f.write(text)
+
+p = Popen(
+    f'nohup code "{parent_dir + dir_name}" > /dev/null',
+    shell=True,
+    stdin=None,
+    stdout=None,
+    stderr=None,
+    close_fds=True,
+    preexec_fn=os.setpgrp,  # type: ignore
+)
