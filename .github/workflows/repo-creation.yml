@@ -15,9 +15,9 @@ jobs:
 
     - name: Make changes
       run: |
-        sed -i "s/Base Bot/${{ github.event.repository.name }} - Discord Bot/g" bot_setup.iss
+        sed -i "s/%REPO_NAME%/${{ github.event.repository.name }} - Discord Bot/g" bot_setup.iss
         sed -i "s/%APP_ID%/$(uuidgen)/g" bot_setup.iss
-        sed -i "s/%REPO_OWNER%/${{ github.event.repository.owner.name }}/g" bot_setup.iss
+        sed -i "s/%REPO_OWNER%/${{ github.event.repository.owner.login }}/g" bot_setup.iss
 
     - name: Check for changes
       run: |
