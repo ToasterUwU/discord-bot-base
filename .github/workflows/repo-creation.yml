@@ -15,8 +15,8 @@ jobs:
 
     - name: Make changes
       run: |
-        sed -i 's/Base Bot/${{ github.event.repository.name }} - Discord Bot/g' bot_setup.iss
-        sed -i 's/%APP_ID%/$(uuidgen)/g' bot_setup.iss
+        sed -i "s/Base Bot/${{ github.event.repository.name }} - Discord Bot/g" bot_setup.iss
+        sed -i "s/%APP_ID%/$(uuidgen)/g" bot_setup.iss
 
     - name: Check for changes
       run: |
@@ -27,3 +27,6 @@ jobs:
 
     - name: Commit
       uses: EndBug/add-and-commit@v9
+      with:
+        default_author: github_actions
+        message: "setup(bot_setup.iss): update application name and replace placeholder App ID"
