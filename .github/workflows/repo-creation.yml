@@ -1,9 +1,7 @@
 name: Automatic repo changes on creation
 
 on:
-  repository_dispatch:
-    types:
-      - repo_created
+  create:
 
 jobs:
   build:
@@ -30,5 +28,5 @@ jobs:
         git config --global user.name "${{ github.event.repository.owner.login }}"
         git config --global user.email "${{ github.event.repository.owner.email }}"
         git add .
-        git commit -m "Automatic changes on fork"
+        git commit -m "Automatic changes on creation from template"
         git push origin HEAD:main
