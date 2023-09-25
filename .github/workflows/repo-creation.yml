@@ -23,8 +23,5 @@ jobs:
           exit 0
         fi
 
-    - name: Commit and push
-      run: |
-        git add .
-        git commit -m "Automatic changes on creation from template"
-        git push origin HEAD:main
+    - name: Commit
+      uses: EndBug/add-and-commit@v9
