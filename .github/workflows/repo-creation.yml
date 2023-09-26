@@ -26,4 +26,4 @@ jobs:
       with:
         push: origin HEAD:master
         default_author: github_actions
-        message: "setup: Replace Placeholders, remove setup workflow"
+        message: "setup: replace placeholders, remove setup workflow"
