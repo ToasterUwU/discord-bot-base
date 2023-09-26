@@ -2,28 +2,49 @@ name: Release
 
 on:
   push:
-      tags:
-          - v*
+    tags:
+      - "*"
 
 jobs:
-  release:
-    runs-on: windows-latest
+  ubuntu-build:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.1.0
 
-      - name: Archive Release
-        uses: vimtor/action-zip@v1.1
-        with:
-          files: infos.txt requirements.txt bot_setup.iss bot.py config data .vscode cogs internal_tools
-          dest: source_code.zip
-
       - name: PyInstaller Windows
-        uses: JackMcKew/pyinstaller-action-windows@v0.1.2
+        uses: JackMcKew/pyinstaller-action-windows@python3-10-pyinstaller-5-3
         with:
-          spec: bot.spec
+          path: .
+
+      - name: Upload PyInstaller Output
+        uses: actions/upload-artifact@v3.1.3
+        with:
+          name: pyinstaller-output
+          path: ./dist
+
+  windows-build-and-release:
+    permissions:
+      contents: write
+    runs-on: windows-latest
+    needs: ubuntu-build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.0
+
+      - name: Download PyInstaller Output
+        uses: actions/download-artifact@v2.1.1
+        with:
+          name: pyinstaller-output
+          path: ./dist
 
       - name: Inno Setup Action
         uses: Minionguyjpro/Inno-Setup-Action@v1.1.0
         with:
           path: bot_setup.iss
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: windows_installer.exe
+          generate_release_notes: true
