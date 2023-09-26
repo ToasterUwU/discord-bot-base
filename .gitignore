@@ -3,7 +3,6 @@
 /source_code.zip
 /.timetracker
 __pycache__
-/bot.spec
 /dist
 /build
 /windows_installer.exe

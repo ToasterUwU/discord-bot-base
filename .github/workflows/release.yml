@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  push:
+      tags:
+          - v*
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.0
+
+      - name: Archive Release
+        uses: vimtor/action-zip@v1.1
+        with:
+          files: infos.txt requirements.txt bot_setup.iss bot.py config data .vscode cogs internal_tools
+          dest: source_code.zip
+
+      - name: PyInstaller Windows
+        uses: JackMcKew/pyinstaller-action-windows@v0.1.2
+        with:
+          spec: bot.spec
+
+      - name: Inno Setup Action
+        uses: Minionguyjpro/Inno-Setup-Action@v1.1.0
+        with:
+          path: bot_setup.iss
