@@ -5,6 +5,7 @@ on:
 
 jobs:
   build:
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -19,6 +20,7 @@ jobs:
         sed -i "s/%APP_ID%/$(uuidgen)/g" bot_setup.iss
         sed -i "s/%REPO_OWNER%/${{ github.event.repository.owner.login }}/g" bot_setup.iss
         rm -f .github/workflows/repo-creation.yml
+
     - name: Commit
       uses: EndBug/add-and-commit@v9
       with:
