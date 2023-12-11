@@ -39,7 +39,7 @@ jobs:
           path: ./dist
 
       - name: Inno Setup Action
-        uses: Minionguyjpro/Inno-Setup-Action@v1.1.0
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.1
         with:
           path: bot_setup.iss
 
