@@ -99,7 +99,7 @@ async def main():
         ],
     ):
         if interaction.application_command:
-            if interaction.application_command.error_callback != None:
+            if interaction.application_command.error_callback is not None:
                 return
 
         if isinstance(exception, nextcord.errors.ApplicationInvokeError):
@@ -146,7 +146,7 @@ async def main():
         elif isinstance(
             original_exception, application_checks.errors.ApplicationMissingRole
         ):
-            if type(original_exception.missing_role) == int:
+            if isinstance(original_exception.missing_role, int):
                 missing_role_text = f"<@&{original_exception.missing_role}>"
             else:
                 missing_role_text = f"@{original_exception.missing_role}"
@@ -162,7 +162,7 @@ async def main():
         ):
             missing_role_texts = []
             for missing_role in original_exception.missing_roles:
-                if type(missing_role) == int:
+                if isinstance(missing_role, int):
                     missing_role_texts.append(f"<@&{missing_role}>")
                 else:
                     missing_role_texts.append(f"@{missing_role}")
@@ -176,7 +176,7 @@ async def main():
         elif isinstance(
             original_exception, application_checks.errors.ApplicationBotMissingRole
         ):
-            if type(original_exception.missing_role) == int:
+            if isinstance(original_exception.missing_role, int):
                 missing_role_text = f"<@&{original_exception.missing_role}>"
             else:
                 missing_role_text = f"@{original_exception.missing_role}"
@@ -192,7 +192,7 @@ async def main():
         ):
             missing_role_texts = []
             for missing_role in original_exception.missing_roles:
-                if type(missing_role) == int:
+                if isinstance(missing_role, int):
                     missing_role_texts.append(f"<@&{missing_role}>")
                 else:
                     missing_role_texts.append(f"@{missing_role}")
