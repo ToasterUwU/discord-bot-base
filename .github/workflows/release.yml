@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
 
       - name: PyInstaller Windows
         uses: JackMcKew/pyinstaller-action-windows@python3-10-pyinstaller-5-3
@@ -30,7 +30,7 @@ jobs:
     needs: ubuntu-build
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
 
       - name: Download PyInstaller Output
         uses: actions/download-artifact@v4.1.4
