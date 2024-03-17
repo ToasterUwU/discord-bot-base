@@ -175,6 +175,31 @@ class Owner(commands.Cog):
         else:
             await interaction.send("Done", ephemeral=True)
 
+    @topcommand.subcommand(
+        name="info", description="Shows info about the Bot and its stats"
+    )
+    async def show_info_and_stats(self, interaction: nextcord.Interaction):
+        await interaction.response.defer()
+
+        guild_amount = 0
+        member_amount = 0
+
+        async for g in self.bot.fetch_guilds(limit=None, with_counts=True):
+            guild_amount += 1
+
+            if g.approximate_member_count is not None:
+                member_amount += g.approximate_member_count  # type: ignore
+
+        embed = fancy_embed(
+            title="Stats and Info",
+            fields={
+                "Server Amount": guild_amount,
+                "Approximate User Amount": member_amount,
+            },
+        )
+
+        await interaction.send(embed=embed)
+
 
 async def setup(bot):
     bot.add_cog(Owner(bot))
