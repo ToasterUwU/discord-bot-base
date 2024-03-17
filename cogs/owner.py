@@ -26,10 +26,12 @@ class Owner(commands.Cog):
             return False
 
     @nextcord.slash_command(
-        name="play",
-        description="Sets a 'playing' Status",
-        guild_ids=CONFIG["GENERAL"]["OWNER_COG_GUILD_IDS"],
+        name="owner-cog", guild_ids=CONFIG["GENERAL"]["OWNER_COG_GUILD_IDS"]
     )
+    async def topcommand(self, interaction: nextcord.Interaction):
+        pass
+
+    @topcommand.subcommand(name="play", description="Sets a 'playing' Status")
     async def play_status(
         self,
         interaction: nextcord.Interaction,
@@ -43,11 +45,7 @@ class Owner(commands.Cog):
         await self.bot.change_presence(activity=nextcord.Game(status))
         await interaction.send("Done", ephemeral=True)
 
-    @nextcord.slash_command(
-        name="watch",
-        description="Sets a 'watching' Status",
-        guild_ids=CONFIG["GENERAL"]["OWNER_COG_GUILD_IDS"],
-    )
+    @topcommand.subcommand(name="watch", description="Sets a 'watching' Status")
     async def watch_status(
         self,
         interaction: nextcord.Interaction,
@@ -63,11 +61,7 @@ class Owner(commands.Cog):
         )
         await interaction.send("Done", ephemeral=True)
 
-    @nextcord.slash_command(
-        name="listen",
-        description="Sets a 'listening' Status",
-        guild_ids=CONFIG["GENERAL"]["OWNER_COG_GUILD_IDS"],
-    )
+    @topcommand.subcommand(name="listen", description="Sets a 'listening' Status")
     async def listen_status(
         self,
         interaction: nextcord.Interaction,
@@ -99,11 +93,7 @@ class Owner(commands.Cog):
         else:
             await interaction.response.send_autocomplete(all_cogs)
 
-    @nextcord.slash_command(
-        name="load",
-        description="Loads a Cog",
-        guild_ids=CONFIG["GENERAL"]["OWNER_COG_GUILD_IDS"],
-    )
+    @topcommand.subcommand(name="load", description="Loads a Cog")
     async def load_cog(
         self,
         interaction: nextcord.Interaction,
@@ -124,11 +114,7 @@ class Owner(commands.Cog):
         else:
             await interaction.send("Done", ephemeral=True)
 
-    @nextcord.slash_command(
-        name="unload",
-        description="Loads a Cog",
-        guild_ids=CONFIG["GENERAL"]["OWNER_COG_GUILD_IDS"],
-    )
+    @topcommand.subcommand(name="unload", description="Unloads a Cog")
     async def unload_cog(
         self,
         interaction: nextcord.Interaction,
@@ -149,11 +135,7 @@ class Owner(commands.Cog):
         else:
             await interaction.send("Done", ephemeral=True)
 
-    @nextcord.slash_command(
-        name="reload",
-        description="Reloads a Cog",
-        guild_ids=CONFIG["GENERAL"]["OWNER_COG_GUILD_IDS"],
-    )
+    @topcommand.subcommand(name="reload", description="Reloads a Cog")
     async def reload_cog(
         self,
         interaction: nextcord.Interaction,
@@ -174,6 +156,27 @@ class Owner(commands.Cog):
             await interaction.send(f"**`ERROR:`** {type(e).__name__} - {e}")
         else:
             await interaction.send("Done", ephemeral=True)
+
+    @topcommand.subcommand(
+        name="info", description="Shows info about the Bot and its stats"
+    )
+    async def show_info_and_stats(self, interaction: nextcord.Interaction):
+        guild_amount = 0
+        member_amount = 0
+
+        async for g in self.bot.fetch_guilds(limit=None, with_counts=True):
+            guild_amount += 1
+
+            if g.approximate_member_count is not None:
+                member_amount += g.approximate_member_count  # type: ignore
+
+        embed = fancy_embed(
+            title="Stats and Info",
+            fields={
+                "Server Amount": guild_amount,
+                "Approximate User Amount": member_amount,
+            },
+        )
 
 
 async def setup(bot):
