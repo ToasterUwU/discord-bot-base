@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - name: Check out the code
-      uses: actions/checkout@v4.2.1
+      uses: actions/checkout@v4.2.2
 
     - name: Make changes
       run: |
