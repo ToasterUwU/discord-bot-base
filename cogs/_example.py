@@ -44,7 +44,7 @@ class Example(commands.Cog):
         name="ask",
         description="Example Command",
         default_member_permissions=nextcord.Permissions(administrator=True),
-        dm_permission=False,
+        contexts=[nextcord.InteractionContextType.guild]
     )
     async def ask(self, interaction: nextcord.Interaction):
         """Asks the user a question to confirm something."""
