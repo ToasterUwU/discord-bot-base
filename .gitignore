@@ -1,4 +1,5 @@
 /.venv
+/.direnv
 /bot.log
 /source_code.zip
 /.timetracker
