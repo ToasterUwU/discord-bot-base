@@ -38,7 +38,7 @@ jobs:
           version: ${{ env.PYRIGHT_VERSION }}
           python-version: ${{ matrix.python-version }}
           python-platform: Linux
-          no-comments: true
+          annotate: false
           warnings: true
 
       - name: Run pyright (Windows)
@@ -49,5 +49,5 @@ jobs:
           version: ${{ env.PYRIGHT_VERSION }}
           python-version: ${{ matrix.python-version }}
           python-platform: Windows
-          no-comments: true
+          annotate: false
           warnings: true
