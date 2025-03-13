@@ -18,6 +18,7 @@
         devShells.default = with pkgs; mkShell {
           buildInputs = [
             python3
+            zip
           ];
           shellHook = "python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt";
         };
