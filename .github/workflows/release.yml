@@ -6,37 +6,18 @@ on:
       - "*"
 
 jobs:
-  ubuntu-build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.2.2
-
-      - name: PyInstaller Windows
-        uses: JackMcKew/pyinstaller-action-windows@v0.1.2
-        with:
-          path: .
-
-      - name: Upload PyInstaller Output
-        uses: actions/upload-artifact@v4.5.0
-        with:
-          name: pyinstaller-output
-          path: ./dist
-
   windows-build-and-release:
     permissions:
       contents: write
     runs-on: windows-latest
-    needs: ubuntu-build
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.2.2
-
-      - name: Download PyInstaller Output
-        uses: actions/download-artifact@v4.1.8
+      - name: Versatile PyInstaller
+        uses: sayyid5416/pyinstaller@v1.8.0
         with:
-          name: pyinstaller-output
-          path: ./dist
+          spec: bot.spec
+          requirements: requirements.txt
+          python_ver: "3.12"
+          clean_checkout: false
 
       - name: Inno Setup Action
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
