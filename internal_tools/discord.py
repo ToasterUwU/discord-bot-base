@@ -1,7 +1,7 @@
 import datetime
 from typing import List, Optional, Union
 
-import nextcord
+import discord
 
 from internal_tools.configuration import CONFIG
 
@@ -12,11 +12,11 @@ def CONFIG_EMBED_COLOR():
     """
     Function to give color from the config back
     """
-    return nextcord.Colour(int(CONFIG["GENERAL"]["EMBED_COLOR"].replace("#", ""), 16))
+    return discord.Colour(int(CONFIG["GENERAL"]["EMBED_COLOR"].replace("#", ""), 16))
 
 
-class CatalogView(nextcord.ui.View):
-    def __init__(self, pages: List[nextcord.Embed], timeout: Optional[float] = 300):
+class CatalogView(discord.ui.View):
+    def __init__(self, pages: List[discord.Embed], timeout: Optional[float] = 300):
         if len(pages) <= 1:
             raise ValueError(
                 "Need at least two pages for this Menu to work and make sense."
@@ -40,8 +40,8 @@ class CatalogView(nextcord.ui.View):
         self.pages = pages
         self.current_page: int = 0
 
-        self.user: Optional[Union[nextcord.User, nextcord.Member]] = None
-        self.messsage: nextcord.Message
+        self.user: Optional[Union[discord.User, discord.Member]] = None
+        self.messsage: discord.Message
 
     async def show_page(self, number: int):
         if number < 0 or number > len(self.pages) - 1:
@@ -51,13 +51,19 @@ class CatalogView(nextcord.ui.View):
 
         self.current_page = number
 
-    async def start(self, interaction: nextcord.Interaction):
+    async def start(self, interaction: discord.Interaction):
         self.user = interaction.user
 
         msg = await interaction.response.send_message(
             embed=self.pages[self.current_page], view=self
         )
-        self.messsage = await msg.fetch()
+        if not isinstance(interaction.channel, discord.abc.Messageable):
+            raise TypeError("Channel is not Messageable.")
+
+        if msg.message_id is None:
+            raise ValueError("Message ID is None.")
+
+        self.messsage = await interaction.channel.fetch_message(msg.message_id)
 
     async def on_timeout(self) -> None:
         await self.messsage.delete()
@@ -65,87 +71,87 @@ class CatalogView(nextcord.ui.View):
         return await super().on_timeout()
 
     def allowed_to_use(
-        self, interaction_user: Optional[Union[nextcord.User, nextcord.Member]]
+        self, interaction_user: Optional[Union[discord.User, discord.Member]]
     ):
         if not self.user:
             return True
 
         return interaction_user == self.user
 
-    @nextcord.ui.button(label="⏮️", style=nextcord.ButtonStyle.secondary)
+    @discord.ui.button(label="⏮️", style=discord.ButtonStyle.secondary)
     async def first_page(
-        self, button: nextcord.ui.Button, interaction: nextcord.Interaction
+        self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         if not self.allowed_to_use(interaction.user):
-            await interaction.send(
+            await interaction.response.send_message(
                 "You are not allowed to use this Catalog.", ephemeral=True
             )
             return
 
         if self.current_page == 0:
-            await interaction.send("You are already on the first page.", ephemeral=True)
+            await interaction.response.send_message("You are already on the first page.", ephemeral=True)
             return
 
         await self.show_page(0)
         await interaction.response.pong()
 
-    @nextcord.ui.button(label="◀️", style=nextcord.ButtonStyle.primary)
+    @discord.ui.button(label="◀️", style=discord.ButtonStyle.primary)
     async def previous_page(
-        self, button: nextcord.ui.Button, interaction: nextcord.Interaction
+        self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         if not self.allowed_to_use(interaction.user):
-            await interaction.send(
+            await interaction.response.send_message(
                 "You are not allowed to use this Catalog.", ephemeral=True
             )
             return
 
         if self.current_page == 0:
-            await interaction.send("You are already on the first page.", ephemeral=True)
+            await interaction.response.send_message("You are already on the first page.", ephemeral=True)
             return
 
         await self.show_page(self.current_page - 1)
         await interaction.response.pong()
 
-    @nextcord.ui.button(label="▶️", style=nextcord.ButtonStyle.primary)
+    @discord.ui.button(label="▶️", style=discord .ButtonStyle.primary)
     async def next_page(
-        self, button: nextcord.ui.Button, interaction: nextcord.Interaction
+        self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         if not self.allowed_to_use(interaction.user):
-            await interaction.send(
+            await interaction.response.send_message(
                 "You are not allowed to use this Catalog.", ephemeral=True
             )
             return
 
         if self.current_page == len(self.pages) - 1:
-            await interaction.send("You are already on the last page.", ephemeral=True)
+            await interaction.response.send_message("You are already on the last page.", ephemeral=True)
             return
 
         await self.show_page(self.current_page + 1)
         await interaction.response.pong()
 
-    @nextcord.ui.button(label="⏭️", style=nextcord.ButtonStyle.secondary)
+    @discord.ui.button(label="⏭️", style=discord.ButtonStyle.secondary)
     async def last_page(
-        self, button: nextcord.ui.Button, interaction: nextcord.Interaction
+        self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         if not self.allowed_to_use(interaction.user):
-            await interaction.send(
+            await interaction.response.send_message(
                 "You are not allowed to use this Catalog.", ephemeral=True
             )
             return
 
         if self.current_page == len(self.pages) - 1:
-            await interaction.send("You are already on the last page.", ephemeral=True)
+            await interaction.response.send_message("You are already on the last page.", ephemeral=True)
             return
 
         await self.show_page(len(self.pages) - 1)
         await interaction.response.pong()
 
-    @nextcord.ui.button(label="⏹️", style=nextcord.ButtonStyle.secondary)
+    @discord.ui.button(label="⏹️", style=discord.ButtonStyle.secondary)
     async def stop_catalog(
-        self, button: nextcord.ui.Button, interaction: nextcord.Interaction
+        self, interaction: discord.Interaction, button: discord.ui.Button
     ):
         if not self.allowed_to_use(interaction.user):
-            await interaction.send(
+            await interaction.response.send_message(
                 "You are not allowed to use this Catalog.", ephemeral=True
             )
             return
@@ -161,18 +167,18 @@ def fancy_embed(
     description: str = "",
     fields: dict = {},
     inline: bool = False,
-    color: nextcord.Colour = CONFIG_EMBED_COLOR(),
+    color: discord.Colour = CONFIG_EMBED_COLOR(),
     footer: Optional[str] = "Made by: @ToasterUwU",
     url: Optional[str] = None,
     timestamp: Optional[datetime.datetime] = None,
-    author: Optional[Union[nextcord.User, nextcord.Member]] = None,
+    author: Optional[Union[discord.User, discord.Member]] = None,
     image_url: Optional[str] = None,
     thumbnail_url: Optional[str] = None,
 ):
     """
     Embed generator to save some repeating code
     """
-    embed = nextcord.Embed(
+    embed = discord.Embed(
         title=title, description=description, color=color, url=url, timestamp=timestamp
     )
     for name, val in fields.items():
@@ -185,10 +191,10 @@ def fancy_embed(
         embed.set_author(name=author.display_name, icon_url=author.display_avatar.url)
 
     if image_url:
-        embed.set_image(image_url)
+        embed.set_image(url=image_url)
 
     if thumbnail_url:
-        embed.set_thumbnail(thumbnail_url)
+        embed.set_thumbnail(url=thumbnail_url)
 
     return embed
 
@@ -199,7 +205,7 @@ class GetOrFetch:
     """
 
     @classmethod
-    async def guild(cls, bot: nextcord.Client, id: int):
+    async def guild(cls, bot: discord.Client, id: int):
         guild = bot.get_guild(id)
         if not guild:
             try:
@@ -211,7 +217,7 @@ class GetOrFetch:
 
     @classmethod
     async def channel(
-        cls, bot_or_guild: Union[nextcord.Client, nextcord.Guild], id: int
+        cls, bot_or_guild: Union[discord.Client, discord.Guild], id: int
     ):
         channel = bot_or_guild.get_channel(id)
         if not channel:
@@ -223,16 +229,16 @@ class GetOrFetch:
         return channel
 
     @classmethod
-    async def role(cls, guild: nextcord.Guild, id: int):
+    async def role(cls, guild: discord.Guild, id: int):
         role = guild.get_role(id)
         if not role:
-            await guild.fetch_roles(cache=True)
+            await guild.fetch_roles()
             role = guild.get_role(id)
 
         return role
 
     @classmethod
-    async def member(cls, guild: nextcord.Guild, id: int):
+    async def member(cls, guild: discord.Guild, id: int):
         member = guild.get_member(id)
         if not member:
             try:
@@ -243,7 +249,7 @@ class GetOrFetch:
         return member
 
     @classmethod
-    async def user(cls, bot: nextcord.Client, id: int):
+    async def user(cls, bot: discord.Client, id: int):
         user = bot.get_user(id)
         if not user:
             try:
