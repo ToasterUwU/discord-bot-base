@@ -2,7 +2,7 @@ import traceback
 from typing import Union
 
 import aiohttp
-import nextcord
+import discord
 
 from internal_tools.configuration import CONFIG
 
@@ -14,7 +14,7 @@ async def error_webhook_send(txt_or_error: Union[str, Exception]):
 
     if CONFIG["GENERAL"]["ERROR_WEBHOOK_URL"]:
         async with aiohttp.ClientSession() as session:
-            webhook = nextcord.Webhook.from_url(
+            webhook = discord.Webhook.from_url(
                 CONFIG["GENERAL"]["ERROR_WEBHOOK_URL"], session=session
             )
 
