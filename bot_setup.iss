@@ -37,7 +37,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "dist\bot\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "cogs\*"; DestDir: "{app}\cogs"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "extensions\*"; DestDir: "{app}\extensions"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "config\*"; DestDir: "{app}\config"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 Source: "internal_tools\*"; DestDir: "{app}\internal_tools"; Flags: ignoreversion recursesubdirs createallsubdirs
