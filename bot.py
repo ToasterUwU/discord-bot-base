@@ -1,18 +1,14 @@
-import asyncio
 import logging
 import os
 import sys
-from typing import Union
 
-import nextcord
-from nextcord.ext import application_checks, commands, tasks
+import interactions
 
 from internal_tools.configuration import CONFIG
 from internal_tools.general import error_webhook_send
 
-
-async def main():
-    logger = logging.getLogger("nextcord")
+if __name__ == "__main__":
+    logger = logging.getLogger("DiscordBot")
     logger.setLevel(logging.WARNING)
     handler = logging.FileHandler(filename="bot.log", encoding="utf-8", mode="w")
     handler.setFormatter(
@@ -20,12 +16,15 @@ async def main():
     )
     logger.addHandler(handler)
 
-    intents = nextcord.Intents.default()
-    intents.members = CONFIG["GENERAL"]["MEMBERS_INTENT"]
-    intents.presences = CONFIG["GENERAL"]["PRESENCE_INTENT"]
-    intents.message_content = CONFIG["GENERAL"]["MESSAGE_CONTENT_INTENT"]
+    intents = interactions.Intents.DEFAULT
+    if CONFIG["GENERAL"]["MEMBERS_INTENT"]:
+        intents = intents | interactions.Intents.GUILD_MEMBERS
+    if CONFIG["GENERAL"]["PRESENCE_INTENT"]:
+        intents = intents | interactions.Intents.GUILD_PRESENCES
+    if CONFIG["GENERAL"]["MESSAGE_CONTENT_INTENT"]:
+        intents = intents | interactions.Intents.MESSAGE_CONTENT
 
-    bot = commands.Bot(intents=intents)
+    bot = interactions.Client(intents=intents)
 
     if CONFIG["GENERAL"]["TOKEN"] == "":
         if len(sys.argv) > 1:
@@ -38,268 +37,103 @@ async def main():
         CONFIG["GENERAL"]["TOKEN"] = token
         CONFIG.save()
 
-    for cog in [
-        "cogs." + x.name.replace(".py", "")
-        for x in os.scandir("cogs")
+    for extension in [
+        "extensions." + x.name.replace(".py", "")
+        for x in os.scandir("extensions")
         if not x.name.startswith("_")
     ]:
         try:
-            bot.load_extension(cog)
-            print(f"Loaded: {cog}")
+            bot.load_extension(extension)
+            print(f"Loaded: {extension}")
         except Exception as e:
             print(f"{e}")
 
-    @bot.event
-    async def on_ready():
-        await bot.change_presence(activity=nextcord.Game("with Slash Commands"))
+    @interactions.listen()
+    async def on_startup():
+        await bot.change_presence(activity=interactions.Activity("with Slash Commands"))
 
         print(f"Online and Ready\nLogged in as {bot.user}")
 
-    @bot.slash_command(
+    @interactions.slash_command(
         name="reload-all",
-        description="Reloads all Cogs",
-        guild_ids=CONFIG["GENERAL"]["OWNER_COG_GUILD_IDS"],
+        description="Reloads all Extensions",
+        scopes=CONFIG["GENERAL"]["OWNER_EXTENSION_GUILD_IDS"],
     )
-    @application_checks.is_owner()
-    async def reload_all_cogs(interaction: nextcord.Interaction):
-        usable_cogs = [
-            "cogs." + x.name.replace(".py", "")
-            for x in os.scandir("cogs")
+    @interactions.check(interactions.is_owner())
+    async def reload_all_extensions(interaction: interactions.SlashContext):
+        usable_extensions = [
+            "extensions." + x.name.replace(".py", "")
+            for x in os.scandir("extensions")
             if not x.name.startswith("_")
         ]
-        for cog in usable_cogs:
+        for extension in usable_extensions:
             try:
-                bot.unload_extension(cog)
+                bot.unload_extension(extension)
             except:
                 pass
 
-            bot.load_extension(cog)
+            bot.load_extension(extension)
 
         await interaction.send("Done", ephemeral=True)
 
-    async def _try_send(interaction: nextcord.Interaction, text: str):
+    async def _try_send(interaction: interactions.SlashContext, text: str):
         try:
             await interaction.send(
                 text,
                 ephemeral=True,
             )
-        except nextcord.errors.Forbidden:
+        except interactions.errors.Forbidden:
             return False
-        except nextcord.errors.NotFound:
+        except interactions.errors.NotFound:
             return False
         else:
             return True
 
-    @bot.event
-    async def on_application_command_error(
-        interaction: nextcord.Interaction,
-        exception: Union[
-            nextcord.errors.ApplicationInvokeError,
-            nextcord.errors.ApplicationCheckFailure,
-        ],
+    @interactions.listen(interactions.api.events.CommandError)
+    async def on_command_error(
+        ctx: interactions.SlashContext,
+        exception: Exception,
     ):
-        if interaction.application_command:
-            if interaction.application_command.error_callback is not None:
+        if ctx.command is not None:
+            if ctx.command.error_callback is not None:
                 return
 
-        if isinstance(exception, nextcord.errors.ApplicationInvokeError):
-            original_exception = exception.original
-        else:
-            original_exception = exception
-
-        if isinstance(
-            original_exception, application_checks.errors.ApplicationCheckAnyFailure
-        ):
-            original_exception = original_exception.errors[
-                0
-            ]  # Take the first problem and show it. Step by step.
-
-        if isinstance(original_exception, nextcord.errors.NotFound):
+        if isinstance(exception, interactions.errors.NotFound):
             if await _try_send(
-                interaction,
+                ctx,
                 "Something being used for this Command (like a channel, member, role, etc.) is missing. It was deleted, or the person left. Fix this issue and try again.",
             ):
                 return
 
-        elif isinstance(original_exception, nextcord.errors.Forbidden):
+        elif isinstance(exception, interactions.errors.Forbidden):
             if await _try_send(
-                interaction,
+                ctx,
                 "The Bot is missing permissions for something it has to do for this Command. Make sure it has all needed permissions and try again.",
             ):
                 return
             else:
                 try:
-                    if interaction.user:
-                        await interaction.user.send(
-                            f"The Bot lacks the Permissions needed to send Messages in the Channel you just tried to use a Command in."
+                    if ctx.user:
+                        await ctx.user.send(
+                            "The Bot lacks the Permissions needed to send Messages in the Channel you just tried to use a Command in."
                         )
                 except:
                     return
 
-        elif isinstance(original_exception, nextcord.errors.DiscordServerError):
+        elif isinstance(exception, interactions.errors.DiscordError):
             if await _try_send(
-                interaction,
+                ctx,
                 "Something went wrong on Discords side. Please try again later.",
             ):
                 return
 
-        elif isinstance(
-            original_exception, application_checks.errors.ApplicationMissingRole
-        ):
-            if isinstance(original_exception.missing_role, int):
-                missing_role_text = f"<@&{original_exception.missing_role}>"
-            else:
-                missing_role_text = f"@{original_exception.missing_role}"
-
+        elif isinstance(exception, interactions.errors.CommandCheckFailure):
             if await _try_send(
-                interaction,
-                f"You are missing the Role that is needed to use this Command. ( {missing_role_text} )",
+                ctx,
+                "You are missing a Requirement to use this Command. This could be being the Owner of the Bot, having a certain Role, Permission, only being allowed to use this command in a specific channel, etc.",
             ):
                 return
 
-        elif isinstance(
-            original_exception, application_checks.errors.ApplicationMissingAnyRole
-        ):
-            missing_role_texts = []
-            for missing_role in original_exception.missing_roles:
-                if isinstance(missing_role, int):
-                    missing_role_texts.append(f"<@&{missing_role}>")
-                else:
-                    missing_role_texts.append(f"@{missing_role}")
+        await error_webhook_send(exception, bot)
 
-            if await _try_send(
-                interaction,
-                f"You are missing a Role that is needed to use this Command. ( You need at least on of these: {', '.join(missing_role_texts)} )",
-            ):
-                return
-
-        elif isinstance(
-            original_exception, application_checks.errors.ApplicationBotMissingRole
-        ):
-            if isinstance(original_exception.missing_role, int):
-                missing_role_text = f"<@&{original_exception.missing_role}>"
-            else:
-                missing_role_text = f"@{original_exception.missing_role}"
-
-            if await _try_send(
-                interaction,
-                f"The Bot is missing the Role that is needed to use this Command. ( {missing_role_text} )",
-            ):
-                return
-
-        elif isinstance(
-            original_exception, application_checks.errors.ApplicationBotMissingAnyRole
-        ):
-            missing_role_texts = []
-            for missing_role in original_exception.missing_roles:
-                if isinstance(missing_role, int):
-                    missing_role_texts.append(f"<@&{missing_role}>")
-                else:
-                    missing_role_texts.append(f"@{missing_role}")
-
-            if await _try_send(
-                interaction,
-                f"The Bot is missing a Role that is needed to use this Command. ( The Bot needs at least on of these: {', '.join(missing_role_texts)} )",
-            ):
-                return
-
-        elif isinstance(
-            original_exception, application_checks.errors.ApplicationMissingPermissions
-        ):
-            if await _try_send(
-                interaction,
-                f"You lack the Permissions needed to use this Command.\nYou need all of these Permissions: {', '.join(original_exception.missing_permissions)}",
-            ):
-                return
-
-        elif isinstance(
-            original_exception,
-            application_checks.errors.ApplicationBotMissingPermissions,
-        ):
-            if await _try_send(
-                interaction,
-                f"The Bot lacks the Permissions needed to use this Command.\nThe Bot needs all of these Permissions: {', '.join(original_exception.missing_permissions)}",
-            ):
-                return
-            else:
-                try:
-                    if interaction.user:
-                        await interaction.user.send(
-                            f"The Bot lacks the Permissions needed to send Messages in the Channel you just tried to use a Command in.\nThe Bot needs all of these Permissions: {', '.join(original_exception.missing_permissions)}"
-                        )
-                except:
-                    return
-
-        elif isinstance(
-            original_exception, application_checks.errors.ApplicationNoPrivateMessage
-        ):
-            if await _try_send(
-                interaction,
-                f"This Command cant be used in DMs. Use it on a Server instead.",
-            ):
-                return
-
-        elif isinstance(
-            original_exception,
-            application_checks.errors.ApplicationPrivateMessageOnly,
-        ):
-            if await _try_send(
-                interaction,
-                f"This Command can only be used in DMs.",
-            ):
-                return
-
-        elif isinstance(
-            original_exception,
-            application_checks.errors.ApplicationNotOwner,
-        ):
-            if await _try_send(
-                interaction,
-                f"You need to be the Owner of this Bot to use this Command.",
-            ):
-                return
-
-        elif isinstance(
-            original_exception,
-            application_checks.errors.ApplicationNSFWChannelRequired,
-        ):
-            if original_exception.channel:
-                channel_mention = f"<#{original_exception.channel.id}>"
-            else:
-                channel_mention = f"The Channel used for this Command"
-
-            if await _try_send(
-                interaction,
-                f"{channel_mention} needs to be a NSFW Channel. You can make it one in the Channel settings.",
-            ):
-                return
-
-        elif isinstance(
-            original_exception,
-            application_checks.errors.ApplicationCheckForBotOnly,
-        ):
-            if await _try_send(
-                interaction,
-                f"This Command is only usable for other Bots.",
-            ):
-                return
-
-        elif isinstance(original_exception, nextcord.errors.ApplicationCheckFailure):
-            try:
-                doc_string = interaction.application_command.parent_cog.cog_application_command_check.__doc__.strip("\n ")  # type: ignore
-            except:
-                doc_string = ""
-
-            if await _try_send(
-                interaction,
-                f"You are not allowed to use this Command.\n{doc_string}",
-            ):
-                return
-
-        await error_webhook_send(original_exception)
-
-    await bot.start(CONFIG["GENERAL"]["TOKEN"])
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
+    bot.start(CONFIG["GENERAL"]["TOKEN"])

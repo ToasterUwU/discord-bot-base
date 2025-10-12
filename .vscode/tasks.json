@@ -38,7 +38,7 @@
           "config",
           "data",
           ".vscode",
-          "cogs",
+          "extensions",
           "internal_tools"
         ]
       },
@@ -54,7 +54,7 @@
           "config/",
           "data/",
           ".vscode/",
-          "cogs/",
+          "extensions/",
           "internal_tools/"
         ]
       },
