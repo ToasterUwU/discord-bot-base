@@ -150,10 +150,10 @@ class JsonDictSaver(UserDict):
             elif val == "null":
                 val = None
 
-            elif re.match(r"\d{1,4}-\d{1,2}-\d{1,4}T\d{1,2}:\d{1,2}:\d{1,2}", val):
+            elif re.match(r"\d{1,4}-\d{1,2}-\d{1,2}T\d{1,2}:\d{1,2}:\d{1,2}", val):
                 val = datetime.datetime.fromisoformat(val)
 
-            elif re.match(r"\d{1,4}-\d{1,2}-\d{1,4}", val):
+            elif re.match(r"\d{1,4}-\d{1,2}-\d{1,2}", val):
                 val = datetime.date.fromisoformat(val)
 
             elif re.match(r"\d{1,2}:\d{1,2}:\d{1,2}", val):
