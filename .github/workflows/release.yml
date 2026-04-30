@@ -20,7 +20,7 @@ jobs:
           clean_checkout: false
 
       - name: Inno Setup Action
-        uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.7
         with:
           path: bot_setup.iss
 
